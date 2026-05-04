@@ -1,93 +1,160 @@
-# 🏠 Bangalore House Price Prediction
+# 🚀 Bangalore House Price Prediction
 
-> A complete end-to-end Machine Learning project to predict housing prices in Bangalore, India, featuring a comprehensive data science pipeline and a functional web application.
+<div align="center">
 
-This project covers the full lifecycle of a data science project: from data cleaning and feature engineering to model deployment via a local Flask server and a simple web frontend.
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Stars](https://img.shields.io/github/stars/Vaishnavi-Dubey/price_prediction.svg?style=for-the-badge)](https://github.com/Vaishnavi-Dubey/price_prediction/stargazers)
 
----
+![Python](https://img.shields.io/badge/Python-14354C?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
 
-## ✨ Features
+</div>
 
-### 📊 Comprehensive Data Pipeline
-- **Data Cleaning**: Handled missing values and inconsistent data in the original dataset of 13,000+ entries.
-- **Feature Engineering**: Simplified complex features like `total_sqft` and added `price_per_sqft` for better analysis.
-- **Outlier Removal**: Used domain knowledge and business logic (e.g., minimum sqft per bedroom) and standard deviations to remove data noise.
-- **Dimensionality Reduction**: Grouped infrequent locations into an 'other' category to optimize one-hot encoding.
-
-### 🤖 Machine Learning Modeling
-- Trained multiple models including **Linear Regression**, **Lasso Regression**, and **Decision Tree**.
-- Used **K-Fold Cross Validation** and **GridSearchCV** for hyperparameter tuning and model selection.
-- Achieved high accuracy with Linear Regression as the final production model.
-
-### 🌐 Web Application
-- **Backend**: Python Flask server to serve predictions.
-- **Frontend**: Clean UI (HTML/CSS/JS) for users to input area, BHK, bathrooms, and location to get instant price estimates.
+> A complete **end-to-end Machine Learning project** predicting housing prices in Bangalore, India — featuring a comprehensive data science pipeline (13,000+ entries), trained ML models, a Flask prediction API, and a functional web frontend for instant price estimates.
 
 ---
 
-## 🏗️ Architecture
+## ✨ Key Features
+
+- 📊 **Comprehensive Data Pipeline** — Full EDA, cleaning, and feature engineering on 13,000+ property records
+- 🧹 **Advanced Data Cleaning** — Handles missing values, inconsistent formats, and noisy data
+- 🔬 **Feature Engineering** — Engineered `price_per_sqft`, simplified `total_sqft`, and location grouping
+- 📉 **Outlier Removal** — Domain-knowledge-driven removal using business logic + statistical methods
+- 🤖 **Model Comparison** — Linear Regression vs Lasso Regression vs Decision Tree with cross-validation
+- 🔍 **Hyperparameter Tuning** — GridSearchCV for optimal model selection
+- 🌐 **Web Application** — Flask API + HTML/CSS/JS frontend for real-time price predictions
+- 📦 **Model Serialization** — Trained model exported as pickle for production deployment
+
+---
+
+## 🧠 Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Data Science** | Python, Pandas, NumPy, Matplotlib |
+| **Machine Learning** | Scikit-learn (Linear Regression, Lasso, Decision Tree, GridSearchCV) |
+| **Model Tuning** | K-Fold Cross Validation, GridSearchCV |
+| **Backend API** | Flask |
+| **Frontend** | HTML5, CSS3, JavaScript |
+| **Serialization** | Pickle (model), JSON (columns) |
+
+---
+
+## 🏗️ Architecture / How It Works
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              Data Science Pipeline (Jupyter)                │
+│                                                             │
+│  Raw Data (13K+ rows)                                       │
+│       ↓                                                     │
+│  Data Cleaning → Feature Engineering → Outlier Removal      │
+│       ↓                                                     │
+│  Dimensionality Reduction (location grouping)               │
+│       ↓                                                     │
+│  Model Training (Linear Reg, Lasso, Decision Tree)          │
+│       ↓                                                     │
+│  GridSearchCV → Best Model → Export (pickle + JSON)         │
+└──────────────────┬──────────────────────────────────────────┘
+                   ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Flask API (server.py + util.py)                │
+│  Loads pickle model → Accepts HTTP requests → Returns price │
+└──────────────────┬──────────────────────────────────────────┘
+                   ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Web Frontend (app.html + app.js + app.css)     │
+│  User inputs: Area (sqft), BHK, Bathrooms, Location        │
+│  → API call → Instant price estimate displayed              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/Vaishnavi-Dubey/price_prediction.git
+cd price_prediction
+
+# Install dependencies
+pip install flask numpy pandas scikit-learn matplotlib jupyter
+```
+
+---
+
+## ▶️ Usage
+
+### 1. Explore the Data Science Pipeline (Optional)
+```bash
+jupyter notebook price-prediction.ipynb
+```
+
+### 2. Start the Prediction Server
+```bash
+python server.py
+# Server starts at http://127.0.0.1:5000/
+```
+
+### 3. Use the Web Interface
+Open `app.html` in any browser → Enter house details → Click **"Estimate Price"**
+
+---
+
+## 📂 Project Structure
 
 ```
 price_prediction/
-├── model/
-│   ├── price-prediction.ipynb        # Data science workspace (Jupyter)
-│   ├── banglore_home_prices_model.pickle # Exported trained model
-│   └── columns.json                  # Data structure for one-hot encoding
-├── server/
-│   ├── server.py                     # Flask API
-│   └── util.py                       # Prediction logic & model loading
-├── client/
-│   ├── app.html                      # Frontend UI
-│   ├── app.js                        # API calls to Flask
-│   └── app.css                       # Styling
-└── data/
-    └── Bengaluru_House_Data.csv.xls  # Source dataset
+├── price-prediction.ipynb             # Full data science pipeline
+├── server.py                          # Flask API server
+├── util.py                            # Model loading & prediction logic
+├── banglore_home_prices_model.pickle  # Trained ML model
+├── columns.json                       # Feature columns for one-hot encoding
+├── bhp.csv                            # Processed dataset
+├── Bengaluru_House_Data.csv.xls       # Raw source dataset (13K+ entries)
+├── app.html                           # Web frontend — user interface
+├── app.js                             # Frontend JS — API integration
+└── app.css                            # Frontend styles
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## 📸 Screenshots / Demo
 
-| Layer | Technology |
-|---|---|
-| **Data Science** | Python, Pandas, Matplotlib, NumPy |
-| **Machine Learning** | Scikit-learn (Linear Regression, GridSearchCV) |
-| **Backend** | Flask |
-| **Frontend** | HTML, CSS, JavaScript |
+> Screenshots of the web interface and Jupyter visualizations coming soon!
 
 ---
 
-## 🚀 Getting Started
+## 📈 Impact / Learning / Highlights
 
-### 1. Model Training (Optional)
-Open `price-prediction.ipynb` in Jupyter Notebook or Google Colab to see the full analysis, visualizations, and model training steps.
-
-### 2. Run the Prediction Server
-```bash
-# Install dependencies
-pip install flask numpy pandas scikit-learn
-
-# Start the server
-python server/server.py
-```
-The server will start at `http://127.0.0.1:5000/`.
-
-### 3. Use the Web UI
-Simply open `client/app.html` in any modern web browser. 
-Enter the house details and click **"Estimate Price"** to get the result from the backend.
+- 📊 **13,000+ Data Points** — Real-world Bangalore housing data, not synthetic
+- 🎯 **Location is King** — Analysis proved location as the #1 price predictor
+- 📉 **Outlier Impact** — Smart outlier removal significantly improved R² scores
+- 🔬 **Model Selection** — Systematic comparison showed Linear Regression outperforms Decision Tree on this dataset
+- 🌐 **Full Deployment** — Model trained in Jupyter, served via Flask, consumed by web frontend
+- 💡 **Feature Engineering** — `price_per_sqft` + location grouping dramatically improved model accuracy
 
 ---
 
-## 📈 Key Insights
-- Location is the most significant factor affecting prices in Bangalore.
-- Removing outliers where `price_per_sqft` was too low or too high significantly improved model R² scores.
+## 🤝 Contributing
+
+Contributions are welcome! Potential improvements:
+- Add more regression models (XGBoost, Random Forest)
+- Enhance the web frontend with interactive maps
+- Add confidence intervals to predictions
 
 ---
 
-## 👩‍💻 Author
-**Vaishnavi Dubey**  
-[GitHub Profile](https://github.com/Vaishnavi-Dubey)
+## 📜 License
+
+This project is licensed under the **MIT License**.
 
 ---
 
-<p align="center">Empowering data-driven real estate decisions</p>
+<p align="center">
+  <b>Empowering data-driven real estate decisions</b><br>
+  <b>Built by <a href="https://github.com/Vaishnavi-Dubey">Vaishnavi Dubey</a></b>
+</p>
