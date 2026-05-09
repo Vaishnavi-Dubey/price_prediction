@@ -1,53 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Banglore Home Price Prediction</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="app.js"></script>
-	<link rel="stylesheet" href="app.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prophecy Bangalore — Real-Estate Intelligence Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="app.css" />
 </head>
 <body>
-<div class="img"></div>
-<form class="form">
-	<h2>Area (Square Feet)</h2>
-    <input class="area"  type="text" id="uiSqft" class="floatLabel" name="Squareft" value="1000">
-	<h2>BHK</h2>
-	<div class="switch-field">
-		<input type="radio" id="radio-bhk-1" name="uiBHK" value="1"/>
-		<label for="radio-bhk-1">1</label>
-		<input type="radio" id="radio-bhk-2" name="uiBHK" value="2" checked/>
-		<label for="radio-bhk-2">2</label>
-		<input type="radio" id="radio-bhk-3" name="uiBHK" value="3"/>
-		<label for="radio-bhk-3">3</label>
-		<input type="radio" id="radio-bhk-4" name="uiBHK" value="4"/>
-		<label for="radio-bhk-4">4</label>
-		<input type="radio" id="radio-bhk-5" name="uiBHK" value="5"/>
-		<label for="radio-bhk-5">5</label>
-	</div>
-	</form>
-<form class="form">
-	<h2>Bath</h2>
-	<div class="switch-field">
-		<input type="radio" id="radio-bath-1" name="uiBathrooms" value="1"/>
-		<label for="radio-bath-1">1</label>
-		<input type="radio" id="radio-bath-2" name="uiBathrooms" value="2" checked/>
-		<label for="radio-bath-2">2</label>
-		<input type="radio" id="radio-bath-3" name="uiBathrooms" value="3"/>
-		<label for="radio-bath-3">3</label>
-		<input type="radio" id="radio-bath-4" name="uiBathrooms" value="4"/>
-		<label for="radio-bath-4">4</label>
-		<input type="radio" id="radio-bath-5" name="uiBathrooms" value="5"/>
-		<label for="radio-bath-5">5</label>
-	</div>
-		<h2>Location</h2>
-	<div>
-  <select class="location" name="" id="uiLocations">
-    <option value="" disabled="disabled" selected="selected">Choose a Location</option>
-		<option>Electronic City</option>
-        <option>Rajaji Nagar</option>
-  </select>
-</div>
-	<button class="submit" onclick="onClickedEstimatePrice()" type="button">Estimate Price</button>
-	<div id="uiEstimatedPrice" class="result">	<h2></h2> </div>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">▲</span>
+      <div>
+        <h1>Prophecy <span class="accent">Bangalore</span></h1>
+        <p>An explainable, data-driven look into the heart of Bangalore's property market.</p>
+      </div>
+    </div>
+    <div class="badges">
+      <span class="badge">R² 0.84</span>
+      <span class="badge">13,000+ data points</span>
+      <span class="badge">SHAP-style XAI</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- LEFT: input controls -->
+    <section class="panel inputs">
+      <h2>Configure Property</h2>
+
+      <label class="field">
+        <span>Area (sqft)</span>
+        <input type="number" id="uiSqft" value="1200" min="200" max="20000" />
+      </label>
+
+      <div class="field">
+        <span>BHK</span>
+        <div class="switch-field" data-name="uiBHK">
+          <button data-value="1">1</button>
+          <button data-value="2" class="active">2</button>
+          <button data-value="3">3</button>
+          <button data-value="4">4</button>
+          <button data-value="5">5</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span>Bathrooms</span>
+        <div class="switch-field" data-name="uiBath">
+          <button data-value="1">1</button>
+          <button data-value="2" class="active">2</button>
+          <button data-value="3">3</button>
+          <button data-value="4">4</button>
+          <button data-value="5">5</button>
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Location (A)</span>
+        <select id="uiLocations"></select>
+      </label>
+
+      <label class="field">
+        <span>Compare with (B)</span>
+        <select id="uiLocationsB">
+          <option value="">— Optional —</option>
+        </select>
+      </label>
+
+      <div class="field">
+        <span>Market Sentiment</span>
+        <div class="switch-field" data-name="uiSentiment">
+          <button data-value="bearish">🐻 Bearish</button>
+          <button data-value="neutral" class="active">⚖️ Neutral</button>
+          <button data-value="bullish">🐂 Bullish</button>
+        </div>
+      </div>
+
+      <button id="btnEstimate" class="primary">Run Prophecy</button>
+      <button id="btnPitch" class="secondary">✨ Generate Sales Pitch</button>
+
+      <p class="hint">Tip: pick a location in (B) to unlock the Comparison Engine.</p>
+    </section>
+
+    <!-- CENTER: result -->
+    <section class="panel result">
+      <div class="result-header">
+        <div>
+          <p class="muted">Estimated Price</p>
+          <h2 id="estPrice">— <span class="unit">Lakh</span></h2>
+          <p id="ppsLine" class="muted small"></p>
+        </div>
+        <div class="score-card" id="scoreCard" hidden>
+          <p class="muted">Investment Score</p>
+          <div class="score-circle">
+            <span id="scoreValue">—</span><span class="score-max">/10</span>
+          </div>
+          <p id="scoreVerdict" class="verdict">—</p>
+        </div>
+      </div>
+
+      <div class="explain">
+        <h3>Why this price?</h3>
+        <p class="muted small">Exact feature contributions from the trained model (in ₹ Lakh).</p>
+        <div id="explainList" class="explain-list"></div>
+      </div>
+
+      <div class="pitch" id="pitchBlock" hidden>
+        <h3>✨ AI Sales Pitch</h3>
+        <p id="pitchText"></p>
+      </div>
+    </section>
+
+    <!-- RIGHT: map + compare -->
+    <section class="panel map-panel">
+      <h2>Geospatial View</h2>
+      <div id="map"></div>
+      <div id="compareBox" class="compare" hidden>
+        <h3>Comparison</h3>
+        <div class="compare-grid">
+          <div><p class="muted">Location A</p><p id="cmpA" class="big">—</p></div>
+          <div><p class="muted">Location B</p><p id="cmpB" class="big">—</p></div>
+        </div>
+        <p id="cmpSummary" class="muted"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Prophecy Bangalore · Built by <a href="https://github.com/Vaishnavi-Dubey" target="_blank" rel="noopener">Vaishnavi Dubey</a></span>
+    <span class="mono">model: LinearRegression · GridSearchCV tuned</span>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
