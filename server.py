@@ -40,6 +40,11 @@ def coords():
     return jsonify({"coords": util.get_all_coords()})
 
 
+@app.route("/areas/<path:city>", methods=["GET"])
+def areas(city):
+    return jsonify({"city": city, "areas": util.get_areas(city)})
+
+
 @app.route("/predict_home_price", methods=["POST"])
 def predict():
     sqft = float(_v("total_sqft"))

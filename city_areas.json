@@ -1,0 +1,2491 @@
+{
+  "_note": "Curated areas per Indian city with public-domain median \u20b9/sqft and approximate coordinates. Used for area-level prediction, investment benchmarking and atlas pins. Source: aggregated public listings + NHB Residex (2024).",
+  "Mumbai": {
+    "Bandra West": {
+      "pps": 60000,
+      "coords": [
+        19.0596,
+        72.8295
+      ]
+    },
+    "Worli": {
+      "pps": 55000,
+      "coords": [
+        19.0176,
+        72.8118
+      ]
+    },
+    "Lower Parel": {
+      "pps": 45000,
+      "coords": [
+        18.9966,
+        72.8302
+      ]
+    },
+    "Juhu": {
+      "pps": 50000,
+      "coords": [
+        19.1075,
+        72.8263
+      ]
+    },
+    "Powai": {
+      "pps": 28000,
+      "coords": [
+        19.1197,
+        72.9051
+      ]
+    },
+    "Andheri West": {
+      "pps": 30000,
+      "coords": [
+        19.1364,
+        72.8296
+      ]
+    },
+    "Andheri East": {
+      "pps": 22000,
+      "coords": [
+        19.1136,
+        72.8697
+      ]
+    },
+    "Goregaon": {
+      "pps": 22000,
+      "coords": [
+        19.1646,
+        72.8493
+      ]
+    },
+    "Borivali": {
+      "pps": 19000,
+      "coords": [
+        19.2307,
+        72.8567
+      ]
+    },
+    "Malad": {
+      "pps": 18000,
+      "coords": [
+        19.1864,
+        72.8484
+      ]
+    },
+    "Thane": {
+      "pps": 14000,
+      "coords": [
+        19.2183,
+        72.9781
+      ]
+    },
+    "Mulund": {
+      "pps": 18000,
+      "coords": [
+        19.1727,
+        72.956
+      ]
+    },
+    "Ghatkopar": {
+      "pps": 19000,
+      "coords": [
+        19.0863,
+        72.9081
+      ]
+    },
+    "Chembur": {
+      "pps": 22000,
+      "coords": [
+        19.0625,
+        72.8997
+      ]
+    },
+    "Vashi": {
+      "pps": 14000,
+      "coords": [
+        19.077,
+        72.9988
+      ]
+    },
+    "Kharghar": {
+      "pps": 11000,
+      "coords": [
+        19.047,
+        73.0698
+      ]
+    },
+    "Panvel": {
+      "pps": 8500,
+      "coords": [
+        18.9894,
+        73.1175
+      ]
+    }
+  },
+  "Delhi": {
+    "Greater Kailash": {
+      "pps": 28000,
+      "coords": [
+        28.5414,
+        77.2419
+      ]
+    },
+    "Saket": {
+      "pps": 18000,
+      "coords": [
+        28.5244,
+        77.2066
+      ]
+    },
+    "Hauz Khas": {
+      "pps": 25000,
+      "coords": [
+        28.5494,
+        77.2001
+      ]
+    },
+    "Defence Colony": {
+      "pps": 30000,
+      "coords": [
+        28.5717,
+        77.2293
+      ]
+    },
+    "Vasant Kunj": {
+      "pps": 16000,
+      "coords": [
+        28.5239,
+        77.1574
+      ]
+    },
+    "Vasant Vihar": {
+      "pps": 32000,
+      "coords": [
+        28.5621,
+        77.1591
+      ]
+    },
+    "Connaught Place": {
+      "pps": 28000,
+      "coords": [
+        28.6333,
+        77.2167
+      ]
+    },
+    "Karol Bagh": {
+      "pps": 18000,
+      "coords": [
+        28.6519,
+        77.1909
+      ]
+    },
+    "Pitampura": {
+      "pps": 12000,
+      "coords": [
+        28.6986,
+        77.1322
+      ]
+    },
+    "Rohini": {
+      "pps": 9500,
+      "coords": [
+        28.7495,
+        77.0565
+      ]
+    },
+    "Dwarka": {
+      "pps": 10000,
+      "coords": [
+        28.5921,
+        77.046
+      ]
+    },
+    "Janakpuri": {
+      "pps": 11000,
+      "coords": [
+        28.6219,
+        77.0878
+      ]
+    },
+    "Mayur Vihar": {
+      "pps": 9000,
+      "coords": [
+        28.6097,
+        77.2912
+      ]
+    },
+    "Patparganj": {
+      "pps": 10500,
+      "coords": [
+        28.6312,
+        77.2891
+      ]
+    },
+    "Lajpat Nagar": {
+      "pps": 18000,
+      "coords": [
+        28.5677,
+        77.2436
+      ]
+    },
+    "Pitam Pura": {
+      "pps": 12000,
+      "coords": [
+        28.7031,
+        77.1351
+      ]
+    }
+  },
+  "Gurgaon": {
+    "DLF Phase 1": {
+      "pps": 18000,
+      "coords": [
+        28.4774,
+        77.0945
+      ]
+    },
+    "DLF Phase 2": {
+      "pps": 17000,
+      "coords": [
+        28.4942,
+        77.0892
+      ]
+    },
+    "DLF Phase 3": {
+      "pps": 16000,
+      "coords": [
+        28.4954,
+        77.1018
+      ]
+    },
+    "DLF Phase 5": {
+      "pps": 22000,
+      "coords": [
+        28.4486,
+        77.0997
+      ]
+    },
+    "Sector 56": {
+      "pps": 11000,
+      "coords": [
+        28.4225,
+        77.1061
+      ]
+    },
+    "Sector 57": {
+      "pps": 11500,
+      "coords": [
+        28.417,
+        77.0928
+      ]
+    },
+    "Sushant Lok": {
+      "pps": 14000,
+      "coords": [
+        28.4651,
+        77.0855
+      ]
+    },
+    "Golf Course Road": {
+      "pps": 25000,
+      "coords": [
+        28.4419,
+        77.1011
+      ]
+    },
+    "Golf Course Ext": {
+      "pps": 12000,
+      "coords": [
+        28.4175,
+        77.0762
+      ]
+    },
+    "Sohna Road": {
+      "pps": 9000,
+      "coords": [
+        28.3955,
+        77.0496
+      ]
+    },
+    "Cyber City": {
+      "pps": 22000,
+      "coords": [
+        28.4949,
+        77.087
+      ]
+    },
+    "MG Road": {
+      "pps": 18000,
+      "coords": [
+        28.4798,
+        77.0792
+      ]
+    },
+    "New Gurgaon": {
+      "pps": 7500,
+      "coords": [
+        28.418,
+        76.9845
+      ]
+    },
+    "Manesar": {
+      "pps": 6000,
+      "coords": [
+        28.3543,
+        76.9389
+      ]
+    }
+  },
+  "Noida": {
+    "Sector 18": {
+      "pps": 14000,
+      "coords": [
+        28.5703,
+        77.3261
+      ]
+    },
+    "Sector 50": {
+      "pps": 11000,
+      "coords": [
+        28.5719,
+        77.3637
+      ]
+    },
+    "Sector 62": {
+      "pps": 10500,
+      "coords": [
+        28.6271,
+        77.3722
+      ]
+    },
+    "Sector 76": {
+      "pps": 8500,
+      "coords": [
+        28.572,
+        77.3892
+      ]
+    },
+    "Sector 78": {
+      "pps": 8500,
+      "coords": [
+        28.5681,
+        77.385
+      ]
+    },
+    "Sector 137": {
+      "pps": 7500,
+      "coords": [
+        28.5354,
+        77.3915
+      ]
+    },
+    "Greater Noida": {
+      "pps": 5500,
+      "coords": [
+        28.4744,
+        77.504
+      ]
+    },
+    "Noida Extension": {
+      "pps": 5500,
+      "coords": [
+        28.608,
+        77.4286
+      ]
+    },
+    "Sector 150": {
+      "pps": 8000,
+      "coords": [
+        28.49,
+        77.4264
+      ]
+    },
+    "Sector 93": {
+      "pps": 9500,
+      "coords": [
+        28.5503,
+        77.365
+      ]
+    },
+    "Sector 100": {
+      "pps": 8500,
+      "coords": [
+        28.5556,
+        77.358
+      ]
+    }
+  },
+  "Bangalore": {
+    "Whitefield": {
+      "pps": 6500,
+      "coords": [
+        12.9698,
+        77.75
+      ]
+    },
+    "Koramangala": {
+      "pps": 13000,
+      "coords": [
+        12.9352,
+        77.6245
+      ]
+    },
+    "HSR Layout": {
+      "pps": 9500,
+      "coords": [
+        12.9116,
+        77.6473
+      ]
+    },
+    "Marathahalli": {
+      "pps": 6000,
+      "coords": [
+        12.9591,
+        77.6974
+      ]
+    },
+    "Electronic City": {
+      "pps": 4500,
+      "coords": [
+        12.8452,
+        77.6602
+      ]
+    },
+    "Hebbal": {
+      "pps": 7000,
+      "coords": [
+        13.0357,
+        77.597
+      ]
+    },
+    "Yelahanka": {
+      "pps": 5500,
+      "coords": [
+        13.1007,
+        77.5963
+      ]
+    },
+    "JP Nagar": {
+      "pps": 7500,
+      "coords": [
+        12.9081,
+        77.5853
+      ]
+    },
+    "Bellandur": {
+      "pps": 7500,
+      "coords": [
+        12.9259,
+        77.676
+      ]
+    },
+    "BTM Layout": {
+      "pps": 7000,
+      "coords": [
+        12.9166,
+        77.6101
+      ]
+    },
+    "Banashankari": {
+      "pps": 6500,
+      "coords": [
+        12.9255,
+        77.5468
+      ]
+    },
+    "Malleshwaram": {
+      "pps": 11000,
+      "coords": [
+        13.0035,
+        77.5709
+      ]
+    },
+    "Rajaji Nagar": {
+      "pps": 9000,
+      "coords": [
+        12.9915,
+        77.5523
+      ]
+    },
+    "Hennur": {
+      "pps": 5500,
+      "coords": [
+        13.0381,
+        77.636
+      ]
+    },
+    "Indira Nagar": {
+      "pps": 12000,
+      "coords": [
+        12.9719,
+        77.6412
+      ]
+    },
+    "1st Block Jayanagar": {
+      "pps": 9500,
+      "coords": [
+        12.925,
+        77.5938
+      ]
+    },
+    "Sarjapur": {
+      "pps": 6500,
+      "coords": [
+        12.897,
+        77.6951
+      ]
+    },
+    "Kanakapura": {
+      "pps": 5000,
+      "coords": [
+        12.8838,
+        77.5471
+      ]
+    }
+  },
+  "Hyderabad": {
+    "Banjara Hills": {
+      "pps": 15000,
+      "coords": [
+        17.4156,
+        78.4347
+      ]
+    },
+    "Jubilee Hills": {
+      "pps": 18000,
+      "coords": [
+        17.4326,
+        78.4071
+      ]
+    },
+    "Madhapur": {
+      "pps": 10500,
+      "coords": [
+        17.4483,
+        78.3915
+      ]
+    },
+    "HITEC City": {
+      "pps": 11000,
+      "coords": [
+        17.4435,
+        78.3772
+      ]
+    },
+    "Gachibowli": {
+      "pps": 9500,
+      "coords": [
+        17.44,
+        78.3489
+      ]
+    },
+    "Kondapur": {
+      "pps": 8500,
+      "coords": [
+        17.4647,
+        78.3661
+      ]
+    },
+    "Kukatpally": {
+      "pps": 6500,
+      "coords": [
+        17.4849,
+        78.4138
+      ]
+    },
+    "Manikonda": {
+      "pps": 7000,
+      "coords": [
+        17.4079,
+        78.3793
+      ]
+    },
+    "Begumpet": {
+      "pps": 9000,
+      "coords": [
+        17.4399,
+        78.4738
+      ]
+    },
+    "Secunderabad": {
+      "pps": 7500,
+      "coords": [
+        17.4399,
+        78.4983
+      ]
+    },
+    "Miyapur": {
+      "pps": 5500,
+      "coords": [
+        17.504,
+        78.3915
+      ]
+    },
+    "Uppal": {
+      "pps": 5000,
+      "coords": [
+        17.4051,
+        78.5594
+      ]
+    },
+    "LB Nagar": {
+      "pps": 5500,
+      "coords": [
+        17.3471,
+        78.553
+      ]
+    },
+    "Kompally": {
+      "pps": 4500,
+      "coords": [
+        17.534,
+        78.4886
+      ]
+    }
+  },
+  "Pune": {
+    "Koregaon Park": {
+      "pps": 14000,
+      "coords": [
+        18.5379,
+        73.893
+      ]
+    },
+    "Kalyani Nagar": {
+      "pps": 12000,
+      "coords": [
+        18.5476,
+        73.902
+      ]
+    },
+    "Viman Nagar": {
+      "pps": 10500,
+      "coords": [
+        18.5679,
+        73.9143
+      ]
+    },
+    "Kharadi": {
+      "pps": 9500,
+      "coords": [
+        18.5519,
+        73.9446
+      ]
+    },
+    "Hinjewadi": {
+      "pps": 7500,
+      "coords": [
+        18.5912,
+        73.7389
+      ]
+    },
+    "Wakad": {
+      "pps": 8500,
+      "coords": [
+        18.599,
+        73.7626
+      ]
+    },
+    "Baner": {
+      "pps": 10000,
+      "coords": [
+        18.5599,
+        73.778
+      ]
+    },
+    "Aundh": {
+      "pps": 11000,
+      "coords": [
+        18.5589,
+        73.8077
+      ]
+    },
+    "Magarpatta": {
+      "pps": 9500,
+      "coords": [
+        18.5158,
+        73.9303
+      ]
+    },
+    "Hadapsar": {
+      "pps": 8000,
+      "coords": [
+        18.5089,
+        73.9259
+      ]
+    },
+    "Pimple Saudagar": {
+      "pps": 7500,
+      "coords": [
+        18.5993,
+        73.7977
+      ]
+    },
+    "Pimpri": {
+      "pps": 6500,
+      "coords": [
+        18.6298,
+        73.7997
+      ]
+    },
+    "Wagholi": {
+      "pps": 5500,
+      "coords": [
+        18.5793,
+        73.9772
+      ]
+    },
+    "Kothrud": {
+      "pps": 10000,
+      "coords": [
+        18.5074,
+        73.8077
+      ]
+    }
+  },
+  "Chennai": {
+    "Adyar": {
+      "pps": 14000,
+      "coords": [
+        13.0067,
+        80.2576
+      ]
+    },
+    "Anna Nagar": {
+      "pps": 14500,
+      "coords": [
+        13.0843,
+        80.2106
+      ]
+    },
+    "T Nagar": {
+      "pps": 16000,
+      "coords": [
+        13.0418,
+        80.2341
+      ]
+    },
+    "Velachery": {
+      "pps": 8500,
+      "coords": [
+        12.9756,
+        80.2206
+      ]
+    },
+    "Tambaram": {
+      "pps": 6500,
+      "coords": [
+        12.9249,
+        80.1
+      ]
+    },
+    "OMR": {
+      "pps": 7500,
+      "coords": [
+        12.901,
+        80.2279
+      ]
+    },
+    "Sholinganallur": {
+      "pps": 7500,
+      "coords": [
+        12.8996,
+        80.2275
+      ]
+    },
+    "Porur": {
+      "pps": 7000,
+      "coords": [
+        13.0381,
+        80.1565
+      ]
+    },
+    "Mogappair": {
+      "pps": 8500,
+      "coords": [
+        13.0867,
+        80.1709
+      ]
+    },
+    "Perambur": {
+      "pps": 7500,
+      "coords": [
+        13.1142,
+        80.233
+      ]
+    },
+    "Mylapore": {
+      "pps": 14000,
+      "coords": [
+        13.0339,
+        80.27
+      ]
+    },
+    "Nungambakkam": {
+      "pps": 18000,
+      "coords": [
+        13.0604,
+        80.2415
+      ]
+    },
+    "Pallavaram": {
+      "pps": 6000,
+      "coords": [
+        12.9701,
+        80.15
+      ]
+    },
+    "Chromepet": {
+      "pps": 6500,
+      "coords": [
+        12.9516,
+        80.1462
+      ]
+    }
+  },
+  "Kolkata": {
+    "Salt Lake": {
+      "pps": 8500,
+      "coords": [
+        22.5867,
+        88.4173
+      ]
+    },
+    "New Town": {
+      "pps": 6500,
+      "coords": [
+        22.5798,
+        88.4633
+      ]
+    },
+    "Park Street": {
+      "pps": 14000,
+      "coords": [
+        22.5526,
+        88.352
+      ]
+    },
+    "Ballygunge": {
+      "pps": 12000,
+      "coords": [
+        22.5286,
+        88.3669
+      ]
+    },
+    "Jadavpur": {
+      "pps": 7500,
+      "coords": [
+        22.4989,
+        88.3715
+      ]
+    },
+    "Tollygunge": {
+      "pps": 7000,
+      "coords": [
+        22.4936,
+        88.3431
+      ]
+    },
+    "Behala": {
+      "pps": 5500,
+      "coords": [
+        22.4968,
+        88.3138
+      ]
+    },
+    "Howrah": {
+      "pps": 5000,
+      "coords": [
+        22.5958,
+        88.2636
+      ]
+    },
+    "Garia": {
+      "pps": 5500,
+      "coords": [
+        22.463,
+        88.397
+      ]
+    },
+    "Rajarhat": {
+      "pps": 6000,
+      "coords": [
+        22.592,
+        88.44
+      ]
+    },
+    "EM Bypass": {
+      "pps": 8000,
+      "coords": [
+        22.521,
+        88.404
+      ]
+    },
+    "Alipore": {
+      "pps": 16000,
+      "coords": [
+        22.535,
+        88.332
+      ]
+    }
+  },
+  "Ahmedabad": {
+    "Satellite": {
+      "pps": 7500,
+      "coords": [
+        23.0297,
+        72.5248
+      ]
+    },
+    "Bopal": {
+      "pps": 6000,
+      "coords": [
+        23.0276,
+        72.472
+      ]
+    },
+    "SG Highway": {
+      "pps": 7000,
+      "coords": [
+        23.0421,
+        72.506
+      ]
+    },
+    "Vastrapur": {
+      "pps": 7500,
+      "coords": [
+        23.0383,
+        72.5283
+      ]
+    },
+    "Navrangpura": {
+      "pps": 9000,
+      "coords": [
+        23.0395,
+        72.5572
+      ]
+    },
+    "Bodakdev": {
+      "pps": 8000,
+      "coords": [
+        23.038,
+        72.5097
+      ]
+    },
+    "Maninagar": {
+      "pps": 5500,
+      "coords": [
+        22.9967,
+        72.602
+      ]
+    },
+    "Chandkheda": {
+      "pps": 4500,
+      "coords": [
+        23.1066,
+        72.5933
+      ]
+    },
+    "Gota": {
+      "pps": 4500,
+      "coords": [
+        23.1063,
+        72.547
+      ]
+    },
+    "Naranpura": {
+      "pps": 6500,
+      "coords": [
+        23.0586,
+        72.557
+      ]
+    },
+    "Thaltej": {
+      "pps": 7500,
+      "coords": [
+        23.054,
+        72.5009
+      ]
+    },
+    "South Bopal": {
+      "pps": 5500,
+      "coords": [
+        23.0124,
+        72.472
+      ]
+    }
+  },
+  "Jaipur": {
+    "Vaishali Nagar": {
+      "pps": 6500,
+      "coords": [
+        26.9125,
+        75.7423
+      ]
+    },
+    "Mansarovar": {
+      "pps": 5500,
+      "coords": [
+        26.8553,
+        75.7708
+      ]
+    },
+    "C-Scheme": {
+      "pps": 9500,
+      "coords": [
+        26.908,
+        75.8013
+      ]
+    },
+    "Malviya Nagar": {
+      "pps": 6500,
+      "coords": [
+        26.8566,
+        75.8104
+      ]
+    },
+    "Jagatpura": {
+      "pps": 5000,
+      "coords": [
+        26.84,
+        75.848
+      ]
+    },
+    "Tonk Road": {
+      "pps": 5500,
+      "coords": [
+        26.837,
+        75.809
+      ]
+    },
+    "Jhotwara": {
+      "pps": 4000,
+      "coords": [
+        26.9519,
+        75.7529
+      ]
+    },
+    "Sirsi Road": {
+      "pps": 4500,
+      "coords": [
+        26.939,
+        75.7197
+      ]
+    },
+    "Civil Lines": {
+      "pps": 9500,
+      "coords": [
+        26.9034,
+        75.7929
+      ]
+    },
+    "Bani Park": {
+      "pps": 7500,
+      "coords": [
+        26.9343,
+        75.8088
+      ]
+    },
+    "Sodala": {
+      "pps": 4500,
+      "coords": [
+        26.9132,
+        75.783
+      ]
+    },
+    "Ajmer Road": {
+      "pps": 4500,
+      "coords": [
+        26.8838,
+        75.756
+      ]
+    }
+  },
+  "Lucknow": {
+    "Gomti Nagar": {
+      "pps": 5500,
+      "coords": [
+        26.8508,
+        81.0143
+      ]
+    },
+    "Hazratganj": {
+      "pps": 8500,
+      "coords": [
+        26.853,
+        80.9462
+      ]
+    },
+    "Aliganj": {
+      "pps": 5500,
+      "coords": [
+        26.8893,
+        80.9464
+      ]
+    },
+    "Indira Nagar": {
+      "pps": 4500,
+      "coords": [
+        26.873,
+        80.999
+      ]
+    },
+    "Vibhuti Khand": {
+      "pps": 6500,
+      "coords": [
+        26.8649,
+        81.0067
+      ]
+    },
+    "Mahanagar": {
+      "pps": 5500,
+      "coords": [
+        26.8851,
+        80.9476
+      ]
+    },
+    "Jankipuram": {
+      "pps": 4000,
+      "coords": [
+        26.9185,
+        80.9405
+      ]
+    },
+    "Sushant Golf City": {
+      "pps": 4500,
+      "coords": [
+        26.7809,
+        80.997
+      ]
+    },
+    "Aashiana": {
+      "pps": 4500,
+      "coords": [
+        26.8086,
+        80.9264
+      ]
+    },
+    "Vrindavan": {
+      "pps": 4000,
+      "coords": [
+        26.7725,
+        80.945
+      ]
+    }
+  },
+  "Chandigarh": {
+    "Sector 8": {
+      "pps": 12000,
+      "coords": [
+        30.7444,
+        76.7916
+      ]
+    },
+    "Sector 9": {
+      "pps": 11000,
+      "coords": [
+        30.7434,
+        76.7867
+      ]
+    },
+    "Sector 17": {
+      "pps": 14000,
+      "coords": [
+        30.7411,
+        76.7794
+      ]
+    },
+    "Sector 22": {
+      "pps": 9500,
+      "coords": [
+        30.7307,
+        76.779
+      ]
+    },
+    "Sector 35": {
+      "pps": 9500,
+      "coords": [
+        30.7268,
+        76.766
+      ]
+    },
+    "Sector 43": {
+      "pps": 8000,
+      "coords": [
+        30.7159,
+        76.749
+      ]
+    },
+    "Mohali": {
+      "pps": 6000,
+      "coords": [
+        30.7046,
+        76.7179
+      ]
+    },
+    "Panchkula": {
+      "pps": 6500,
+      "coords": [
+        30.6942,
+        76.8606
+      ]
+    },
+    "Zirakpur": {
+      "pps": 4500,
+      "coords": [
+        30.6427,
+        76.8173
+      ]
+    },
+    "Kharar": {
+      "pps": 4000,
+      "coords": [
+        30.7456,
+        76.6463
+      ]
+    }
+  },
+  "Indore": {
+    "Vijay Nagar": {
+      "pps": 6500,
+      "coords": [
+        22.7533,
+        75.8937
+      ]
+    },
+    "AB Road": {
+      "pps": 6000,
+      "coords": [
+        22.747,
+        75.893
+      ]
+    },
+    "Bhanwarkuan": {
+      "pps": 4500,
+      "coords": [
+        22.6831,
+        75.8612
+      ]
+    },
+    "Palasia": {
+      "pps": 6500,
+      "coords": [
+        22.7244,
+        75.8902
+      ]
+    },
+    "Sapna Sangeeta": {
+      "pps": 5500,
+      "coords": [
+        22.7048,
+        75.8681
+      ]
+    },
+    "Mahalakshmi Nagar": {
+      "pps": 5000,
+      "coords": [
+        22.753,
+        75.905
+      ]
+    },
+    "Sudama Nagar": {
+      "pps": 4000,
+      "coords": [
+        22.6864,
+        75.8341
+      ]
+    },
+    "Khajrana": {
+      "pps": 3500,
+      "coords": [
+        22.729,
+        75.9025
+      ]
+    },
+    "Bicholi Mardana": {
+      "pps": 3500,
+      "coords": [
+        22.714,
+        75.943
+      ]
+    },
+    "Bypass Road": {
+      "pps": 4500,
+      "coords": [
+        22.7088,
+        75.9123
+      ]
+    }
+  },
+  "Bhopal": {
+    "MP Nagar": {
+      "pps": 5500,
+      "coords": [
+        23.233,
+        77.4341
+      ]
+    },
+    "Arera Colony": {
+      "pps": 6000,
+      "coords": [
+        23.2124,
+        77.4346
+      ]
+    },
+    "Shahpura": {
+      "pps": 4500,
+      "coords": [
+        23.1968,
+        77.448
+      ]
+    },
+    "Hoshangabad Road": {
+      "pps": 4000,
+      "coords": [
+        23.188,
+        77.438
+      ]
+    },
+    "Bairagarh": {
+      "pps": 3500,
+      "coords": [
+        23.2812,
+        77.3454
+      ]
+    },
+    "Kolar Road": {
+      "pps": 3500,
+      "coords": [
+        23.17,
+        77.447
+      ]
+    },
+    "Ayodhya Bypass": {
+      "pps": 3500,
+      "coords": [
+        23.294,
+        77.461
+      ]
+    },
+    "BHEL": {
+      "pps": 4000,
+      "coords": [
+        23.242,
+        77.4961
+      ]
+    },
+    "Chuna Bhatti": {
+      "pps": 4500,
+      "coords": [
+        23.207,
+        77.419
+      ]
+    }
+  },
+  "Nagpur": {
+    "Civil Lines": {
+      "pps": 6500,
+      "coords": [
+        21.1539,
+        79.0834
+      ]
+    },
+    "Dharampeth": {
+      "pps": 5500,
+      "coords": [
+        21.138,
+        79.0664
+      ]
+    },
+    "Manish Nagar": {
+      "pps": 4500,
+      "coords": [
+        21.0784,
+        79.0541
+      ]
+    },
+    "Jaitala": {
+      "pps": 4000,
+      "coords": [
+        21.1255,
+        79.0327
+      ]
+    },
+    "Pratap Nagar": {
+      "pps": 4500,
+      "coords": [
+        21.119,
+        79.0614
+      ]
+    },
+    "Wardhaman Nagar": {
+      "pps": 4500,
+      "coords": [
+        21.1583,
+        79.1127
+      ]
+    },
+    "Hingna": {
+      "pps": 3500,
+      "coords": [
+        21.0873,
+        79.0035
+      ]
+    },
+    "Besa": {
+      "pps": 4000,
+      "coords": [
+        21.056,
+        79.0667
+      ]
+    },
+    "Trimurti Nagar": {
+      "pps": 4500,
+      "coords": [
+        21.128,
+        79.0489
+      ]
+    }
+  },
+  "Surat": {
+    "Adajan": {
+      "pps": 5500,
+      "coords": [
+        21.1957,
+        72.7929
+      ]
+    },
+    "Vesu": {
+      "pps": 6500,
+      "coords": [
+        21.1462,
+        72.7766
+      ]
+    },
+    "Pal": {
+      "pps": 5500,
+      "coords": [
+        21.1856,
+        72.7779
+      ]
+    },
+    "City Light": {
+      "pps": 6000,
+      "coords": [
+        21.1693,
+        72.786
+      ]
+    },
+    "Piplod": {
+      "pps": 5500,
+      "coords": [
+        21.161,
+        72.788
+      ]
+    },
+    "Athwa": {
+      "pps": 6500,
+      "coords": [
+        21.181,
+        72.803
+      ]
+    },
+    "Katargam": {
+      "pps": 4000,
+      "coords": [
+        21.2253,
+        72.8364
+      ]
+    },
+    "Varachha": {
+      "pps": 4500,
+      "coords": [
+        21.2125,
+        72.8559
+      ]
+    },
+    "Dindoli": {
+      "pps": 3500,
+      "coords": [
+        21.1644,
+        72.887
+      ]
+    },
+    "Sarthana": {
+      "pps": 3500,
+      "coords": [
+        21.239,
+        72.9
+      ]
+    }
+  },
+  "Coimbatore": {
+    "RS Puram": {
+      "pps": 7500,
+      "coords": [
+        11.0033,
+        76.955
+      ]
+    },
+    "Race Course": {
+      "pps": 8500,
+      "coords": [
+        11.005,
+        76.97
+      ]
+    },
+    "Saibaba Colony": {
+      "pps": 6000,
+      "coords": [
+        11.0167,
+        76.945
+      ]
+    },
+    "Peelamedu": {
+      "pps": 5500,
+      "coords": [
+        11.0289,
+        77.027
+      ]
+    },
+    "Vadavalli": {
+      "pps": 4500,
+      "coords": [
+        11.027,
+        76.912
+      ]
+    },
+    "Saravanampatti": {
+      "pps": 4500,
+      "coords": [
+        11.085,
+        77.005
+      ]
+    },
+    "Singanallur": {
+      "pps": 4500,
+      "coords": [
+        11.0014,
+        77.0344
+      ]
+    },
+    "Ganapathy": {
+      "pps": 4500,
+      "coords": [
+        11.0359,
+        76.9883
+      ]
+    },
+    "Kovaipudur": {
+      "pps": 4000,
+      "coords": [
+        10.942,
+        76.9344
+      ]
+    },
+    "Trichy Road": {
+      "pps": 5000,
+      "coords": [
+        10.9985,
+        77.0035
+      ]
+    }
+  },
+  "Kochi": {
+    "Marine Drive": {
+      "pps": 9500,
+      "coords": [
+        9.9763,
+        76.2786
+      ]
+    },
+    "Kakkanad": {
+      "pps": 5500,
+      "coords": [
+        10.0258,
+        76.3096
+      ]
+    },
+    "Edappally": {
+      "pps": 6500,
+      "coords": [
+        10.0252,
+        76.3081
+      ]
+    },
+    "Panampilly Nagar": {
+      "pps": 9000,
+      "coords": [
+        9.9633,
+        76.294
+      ]
+    },
+    "Vyttila": {
+      "pps": 6000,
+      "coords": [
+        9.9685,
+        76.3186
+      ]
+    },
+    "Aluva": {
+      "pps": 4500,
+      "coords": [
+        10.1081,
+        76.3522
+      ]
+    },
+    "Tripunithura": {
+      "pps": 5000,
+      "coords": [
+        9.9501,
+        76.3478
+      ]
+    },
+    "Palarivattom": {
+      "pps": 6000,
+      "coords": [
+        10.007,
+        76.3061
+      ]
+    },
+    "Kaloor": {
+      "pps": 6500,
+      "coords": [
+        9.9988,
+        76.2927
+      ]
+    },
+    "Fort Kochi": {
+      "pps": 7500,
+      "coords": [
+        9.965,
+        76.2422
+      ]
+    }
+  },
+  "Thiruvananthapuram": {
+    "Kowdiar": {
+      "pps": 7500,
+      "coords": [
+        8.5187,
+        76.9533
+      ]
+    },
+    "Pattom": {
+      "pps": 6500,
+      "coords": [
+        8.5258,
+        76.9416
+      ]
+    },
+    "Vellayambalam": {
+      "pps": 6500,
+      "coords": [
+        8.5161,
+        76.9519
+      ]
+    },
+    "Sasthamangalam": {
+      "pps": 6000,
+      "coords": [
+        8.5132,
+        76.9619
+      ]
+    },
+    "Kazhakuttom": {
+      "pps": 4500,
+      "coords": [
+        8.567,
+        76.878
+      ]
+    },
+    "Technopark": {
+      "pps": 5000,
+      "coords": [
+        8.5567,
+        76.8804
+      ]
+    },
+    "Kesavadasapuram": {
+      "pps": 5500,
+      "coords": [
+        8.5279,
+        76.9303
+      ]
+    },
+    "Vazhuthacaud": {
+      "pps": 6500,
+      "coords": [
+        8.507,
+        76.9508
+      ]
+    },
+    "Nemom": {
+      "pps": 4000,
+      "coords": [
+        8.454,
+        76.947
+      ]
+    },
+    "Pongumoodu": {
+      "pps": 4500,
+      "coords": [
+        8.56,
+        76.91
+      ]
+    }
+  },
+  "Visakhapatnam": {
+    "Madhurawada": {
+      "pps": 5500,
+      "coords": [
+        17.7937,
+        83.3683
+      ]
+    },
+    "Rushikonda": {
+      "pps": 6000,
+      "coords": [
+        17.7818,
+        83.3863
+      ]
+    },
+    "MVP Colony": {
+      "pps": 6000,
+      "coords": [
+        17.7355,
+        83.3401
+      ]
+    },
+    "Seethammadhara": {
+      "pps": 5500,
+      "coords": [
+        17.7428,
+        83.3225
+      ]
+    },
+    "Gajuwaka": {
+      "pps": 3500,
+      "coords": [
+        17.6885,
+        83.2098
+      ]
+    },
+    "Kurmannapalem": {
+      "pps": 3500,
+      "coords": [
+        17.652,
+        83.1855
+      ]
+    },
+    "PM Palem": {
+      "pps": 4500,
+      "coords": [
+        17.763,
+        83.376
+      ]
+    },
+    "Dwaraka Nagar": {
+      "pps": 5500,
+      "coords": [
+        17.7242,
+        83.3046
+      ]
+    },
+    "Bheemili": {
+      "pps": 4000,
+      "coords": [
+        17.8889,
+        83.4575
+      ]
+    }
+  },
+  "Mysuru": {
+    "Vijayanagar": {
+      "pps": 5500,
+      "coords": [
+        12.3148,
+        76.6065
+      ]
+    },
+    "Kuvempunagar": {
+      "pps": 5500,
+      "coords": [
+        12.283,
+        76.625
+      ]
+    },
+    "Saraswathipuram": {
+      "pps": 6000,
+      "coords": [
+        12.3074,
+        76.6303
+      ]
+    },
+    "Hebbal": {
+      "pps": 4500,
+      "coords": [
+        12.3389,
+        76.5873
+      ]
+    },
+    "Yadavagiri": {
+      "pps": 6500,
+      "coords": [
+        12.3215,
+        76.6406
+      ]
+    },
+    "Lakshmipuram": {
+      "pps": 5500,
+      "coords": [
+        12.307,
+        76.6457
+      ]
+    },
+    "VV Mohalla": {
+      "pps": 6000,
+      "coords": [
+        12.3207,
+        76.6488
+      ]
+    },
+    "Bogadi": {
+      "pps": 4500,
+      "coords": [
+        12.304,
+        76.6011
+      ]
+    },
+    "Hootagalli": {
+      "pps": 4000,
+      "coords": [
+        12.354,
+        76.5986
+      ]
+    }
+  },
+  "Mangalore": {
+    "Kankanady": {
+      "pps": 6000,
+      "coords": [
+        12.8675,
+        74.846
+      ]
+    },
+    "Bejai": {
+      "pps": 5500,
+      "coords": [
+        12.89,
+        74.848
+      ]
+    },
+    "Kadri": {
+      "pps": 6500,
+      "coords": [
+        12.9007,
+        74.843
+      ]
+    },
+    "Bendoor": {
+      "pps": 6500,
+      "coords": [
+        12.877,
+        74.8388
+      ]
+    },
+    "Surathkal": {
+      "pps": 4000,
+      "coords": [
+        13.0098,
+        74.7935
+      ]
+    },
+    "Mannagudda": {
+      "pps": 5500,
+      "coords": [
+        12.883,
+        74.848
+      ]
+    },
+    "Jeppu": {
+      "pps": 4500,
+      "coords": [
+        12.8525,
+        74.8434
+      ]
+    },
+    "Ullal": {
+      "pps": 4000,
+      "coords": [
+        12.806,
+        74.855
+      ]
+    }
+  },
+  "Goa (Panaji)": {
+    "Panaji": {
+      "pps": 12000,
+      "coords": [
+        15.4909,
+        73.8278
+      ]
+    },
+    "Porvorim": {
+      "pps": 8500,
+      "coords": [
+        15.5408,
+        73.8155
+      ]
+    },
+    "Mapusa": {
+      "pps": 7000,
+      "coords": [
+        15.5947,
+        73.8088
+      ]
+    },
+    "Calangute": {
+      "pps": 11000,
+      "coords": [
+        15.544,
+        73.7553
+      ]
+    },
+    "Candolim": {
+      "pps": 12000,
+      "coords": [
+        15.5165,
+        73.7625
+      ]
+    },
+    "Margao": {
+      "pps": 7500,
+      "coords": [
+        15.2832,
+        73.9862
+      ]
+    },
+    "Vasco": {
+      "pps": 6500,
+      "coords": [
+        15.396,
+        73.8157
+      ]
+    },
+    "Dona Paula": {
+      "pps": 9500,
+      "coords": [
+        15.4581,
+        73.8055
+      ]
+    }
+  },
+  "Bhubaneswar": {
+    "Patia": {
+      "pps": 4500,
+      "coords": [
+        20.3556,
+        85.8169
+      ]
+    },
+    "Saheed Nagar": {
+      "pps": 5500,
+      "coords": [
+        20.296,
+        85.843
+      ]
+    },
+    "Jaydev Vihar": {
+      "pps": 6000,
+      "coords": [
+        20.3018,
+        85.82
+      ]
+    },
+    "Chandrasekharpur": {
+      "pps": 4500,
+      "coords": [
+        20.33,
+        85.82
+      ]
+    },
+    "Nayapalli": {
+      "pps": 5500,
+      "coords": [
+        20.2937,
+        85.8204
+      ]
+    },
+    "Khandagiri": {
+      "pps": 4000,
+      "coords": [
+        20.2521,
+        85.7811
+      ]
+    },
+    "Old Town": {
+      "pps": 4000,
+      "coords": [
+        20.24,
+        85.8336
+      ]
+    },
+    "Tamando": {
+      "pps": 3500,
+      "coords": [
+        20.233,
+        85.76
+      ]
+    }
+  },
+  "Patna": {
+    "Boring Road": {
+      "pps": 5500,
+      "coords": [
+        25.6177,
+        85.0992
+      ]
+    },
+    "Patliputra": {
+      "pps": 5000,
+      "coords": [
+        25.613,
+        85.0989
+      ]
+    },
+    "Kankarbagh": {
+      "pps": 4000,
+      "coords": [
+        25.5989,
+        85.1571
+      ]
+    },
+    "Rajendra Nagar": {
+      "pps": 4500,
+      "coords": [
+        25.608,
+        85.1295
+      ]
+    },
+    "Kidwaipuri": {
+      "pps": 4500,
+      "coords": [
+        25.619,
+        85.11
+      ]
+    },
+    "Bailey Road": {
+      "pps": 5500,
+      "coords": [
+        25.6126,
+        85.0859
+      ]
+    },
+    "Phulwari Sharif": {
+      "pps": 3500,
+      "coords": [
+        25.5263,
+        85.0461
+      ]
+    },
+    "Anisabad": {
+      "pps": 4000,
+      "coords": [
+        25.5723,
+        85.118
+      ]
+    }
+  },
+  "Ranchi": {
+    "Lalpur": {
+      "pps": 5000,
+      "coords": [
+        23.3852,
+        85.329
+      ]
+    },
+    "Kanke": {
+      "pps": 4500,
+      "coords": [
+        23.4351,
+        85.3149
+      ]
+    },
+    "Doranda": {
+      "pps": 4000,
+      "coords": [
+        23.3501,
+        85.327
+      ]
+    },
+    "Hatia": {
+      "pps": 3500,
+      "coords": [
+        23.3303,
+        85.3093
+      ]
+    },
+    "Argora": {
+      "pps": 4500,
+      "coords": [
+        23.3686,
+        85.2991
+      ]
+    },
+    "Bariatu": {
+      "pps": 4500,
+      "coords": [
+        23.4041,
+        85.3263
+      ]
+    },
+    "Morabadi": {
+      "pps": 4500,
+      "coords": [
+        23.3897,
+        85.3177
+      ]
+    },
+    "Harmu": {
+      "pps": 4000,
+      "coords": [
+        23.3596,
+        85.317
+      ]
+    }
+  },
+  "Guwahati": {
+    "Beltola": {
+      "pps": 5000,
+      "coords": [
+        26.1206,
+        91.7906
+      ]
+    },
+    "Dispur": {
+      "pps": 5500,
+      "coords": [
+        26.1433,
+        91.7898
+      ]
+    },
+    "Zoo Road": {
+      "pps": 4500,
+      "coords": [
+        26.1612,
+        91.7679
+      ]
+    },
+    "Six Mile": {
+      "pps": 4500,
+      "coords": [
+        26.1245,
+        91.8
+      ]
+    },
+    "Hatigaon": {
+      "pps": 4500,
+      "coords": [
+        26.1372,
+        91.7972
+      ]
+    },
+    "Khanapara": {
+      "pps": 4000,
+      "coords": [
+        26.1063,
+        91.8011
+      ]
+    },
+    "Maligaon": {
+      "pps": 4500,
+      "coords": [
+        26.1736,
+        91.696
+      ]
+    },
+    "GS Road": {
+      "pps": 6000,
+      "coords": [
+        26.1521,
+        91.7711
+      ]
+    }
+  },
+  "Dehradun": {
+    "Rajpur Road": {
+      "pps": 7500,
+      "coords": [
+        30.3475,
+        78.0622
+      ]
+    },
+    "Sahastradhara Rd": {
+      "pps": 5500,
+      "coords": [
+        30.3537,
+        78.093
+      ]
+    },
+    "Vasant Vihar": {
+      "pps": 6500,
+      "coords": [
+        30.327,
+        77.993
+      ]
+    },
+    "Clement Town": {
+      "pps": 4500,
+      "coords": [
+        30.264,
+        78.021
+      ]
+    },
+    "Patel Nagar": {
+      "pps": 5500,
+      "coords": [
+        30.311,
+        78.0078
+      ]
+    },
+    "Race Course": {
+      "pps": 6500,
+      "coords": [
+        30.3014,
+        78.0463
+      ]
+    },
+    "Ballupur": {
+      "pps": 6000,
+      "coords": [
+        30.337,
+        78.0151
+      ]
+    },
+    "Premnagar": {
+      "pps": 4500,
+      "coords": [
+        30.3413,
+        77.9586
+      ]
+    }
+  },
+  "Shimla": {
+    "Mall Road": {
+      "pps": 9500,
+      "coords": [
+        31.1037,
+        77.173
+      ]
+    },
+    "Sanjauli": {
+      "pps": 6500,
+      "coords": [
+        31.1093,
+        77.1872
+      ]
+    },
+    "New Shimla": {
+      "pps": 6000,
+      "coords": [
+        31.075,
+        77.1785
+      ]
+    },
+    "Kasumpti": {
+      "pps": 5500,
+      "coords": [
+        31.0742,
+        77.1815
+      ]
+    },
+    "Chhota Shimla": {
+      "pps": 6500,
+      "coords": [
+        31.0938,
+        77.1829
+      ]
+    },
+    "Khalini": {
+      "pps": 5500,
+      "coords": [
+        31.081,
+        77.174
+      ]
+    },
+    "Tutikandi": {
+      "pps": 5000,
+      "coords": [
+        31.0942,
+        77.1428
+      ]
+    }
+  },
+  "Amritsar": {
+    "Ranjit Avenue": {
+      "pps": 5500,
+      "coords": [
+        31.6634,
+        74.8723
+      ]
+    },
+    "Green Avenue": {
+      "pps": 5500,
+      "coords": [
+        31.6447,
+        74.8635
+      ]
+    },
+    "Lawrence Road": {
+      "pps": 6500,
+      "coords": [
+        31.6346,
+        74.867
+      ]
+    },
+    "GT Road": {
+      "pps": 4500,
+      "coords": [
+        31.631,
+        74.8755
+      ]
+    },
+    "Mall Road": {
+      "pps": 6000,
+      "coords": [
+        31.629,
+        74.8765
+      ]
+    },
+    "Majitha Road": {
+      "pps": 4500,
+      "coords": [
+        31.647,
+        74.854
+      ]
+    },
+    "Verka": {
+      "pps": 3500,
+      "coords": [
+        31.6818,
+        74.9057
+      ]
+    }
+  },
+  "Vadodara": {
+    "Alkapuri": {
+      "pps": 6500,
+      "coords": [
+        22.3092,
+        73.1729
+      ]
+    },
+    "Akota": {
+      "pps": 5500,
+      "coords": [
+        22.2913,
+        73.1734
+      ]
+    },
+    "Gotri": {
+      "pps": 5000,
+      "coords": [
+        22.314,
+        73.133
+      ]
+    },
+    "Sayajigunj": {
+      "pps": 6000,
+      "coords": [
+        22.314,
+        73.1834
+      ]
+    },
+    "Manjalpur": {
+      "pps": 4500,
+      "coords": [
+        22.2587,
+        73.186
+      ]
+    },
+    "Race Course": {
+      "pps": 6000,
+      "coords": [
+        22.305,
+        73.184
+      ]
+    },
+    "Karelibaug": {
+      "pps": 5000,
+      "coords": [
+        22.3179,
+        73.2049
+      ]
+    },
+    "Vasna": {
+      "pps": 4500,
+      "coords": [
+        22.2925,
+        73.1535
+      ]
+    }
+  },
+  "Nashik": {
+    "Gangapur Road": {
+      "pps": 5500,
+      "coords": [
+        20.014,
+        73.7497
+      ]
+    },
+    "College Road": {
+      "pps": 6000,
+      "coords": [
+        19.9988,
+        73.78
+      ]
+    },
+    "Indira Nagar": {
+      "pps": 5500,
+      "coords": [
+        19.9956,
+        73.7567
+      ]
+    },
+    "Panchavati": {
+      "pps": 5000,
+      "coords": [
+        20.0102,
+        73.79
+      ]
+    },
+    "Deolali": {
+      "pps": 4500,
+      "coords": [
+        19.9536,
+        73.8359
+      ]
+    },
+    "Mhasrul": {
+      "pps": 4000,
+      "coords": [
+        20.0319,
+        73.778
+      ]
+    },
+    "Cidco": {
+      "pps": 4500,
+      "coords": [
+        19.969,
+        73.785
+      ]
+    },
+    "Ambad": {
+      "pps": 4500,
+      "coords": [
+        19.974,
+        73.747
+      ]
+    }
+  }
+}

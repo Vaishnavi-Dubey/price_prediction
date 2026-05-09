@@ -28,7 +28,7 @@ const fmt = (x) => Number(x).toLocaleString("en-IN", { maximumFractionDigits: 2 
 const cap = (s) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 
 /* ─── data load ───────────────────────────────────────── */
-async function loadData() {
+async function loadDataCatalogues() {
   const [cR, lR, ccR] = await Promise.all([
     fetch(`${API}/cities`),
     fetch(`${API}/get_location_names`),
@@ -49,25 +49,52 @@ async function loadData() {
   $("#uiCityB").innerHTML = cityHtml;
   $("#uiCityB").value = "Mumbai";
 
-  // BLR localities
-  const locHtml = state.blrLocs.map((l) => `<option>${cap(l)}</option>`).join("");
-  $("#uiLocations").innerHTML = locHtml;
-  $("#uiLocationsB").innerHTML = `<option value="">— optional —</option>` + locHtml;
-  $("#uiLocations").value = state.blrLocs.find((l) => l.includes("whitefield")) ? "Whitefield" : cap(state.blrLocs[0]);
-
   // Ticker
   const tick = $("#ticker");
   const tickItems = cityKeys.map((c) => `<span>${c} <b>₹${fmt(state.cities[c].pps)}</b></span>`).join("");
-  tick.innerHTML = tickItems + tickItems; // duplicate for seamless loop
-
-  toggleLocalityVisibility();
+  tick.innerHTML = tickItems + tickItems;
 }
 
-function toggleLocalityVisibility() {
-  const isBlr = $("#uiCity").value === "Bangalore";
-  $("#locationRow").style.display = isBlr ? "" : "none";
-  const isBlrB = $("#uiCityB").value === "Bangalore";
-  $("#locationRowB").style.display = isBlrB ? "" : "none";
+async function populateAreaDropdowns() {
+  await Promise.all([
+    loadAreasFor("Bangalore", "#uiLocations", "#hintA", false),
+    loadAreasFor("Mumbai",    "#uiLocationsB", "#hintB", true),
+  ]);
+}
+
+/* ─── Areas: every city now has its own dropdown ──────── */
+async function loadAreasFor(city, selectSel, hintSel, optional) {
+  const sel = $(selectSel);
+  const hint = hintSel ? $(hintSel) : null;
+  let opts = [];
+  try {
+    const r = await fetch(`${API}/areas/${encodeURIComponent(city)}`);
+    const d = await r.json();
+    opts = Object.keys(d.areas || {});
+  } catch (e) { opts = []; }
+
+  // For Bangalore, also offer the full ML-trained locality catalogue
+  if (city === "Bangalore" && state.blrLocs.length) {
+    const seen = new Set(opts.map((o) => o.toLowerCase()));
+    state.blrLocs.forEach((l) => {
+      const pretty = cap(l);
+      if (!seen.has(l.toLowerCase())) opts.push(pretty);
+    });
+  }
+
+  opts.sort((a, b) => a.localeCompare(b));
+  const optHtml = opts.map((o) => `<option>${o}</option>`).join("");
+  sel.innerHTML = (optional ? `<option value="">— optional —</option>` : "") + optHtml;
+  if (!optional && opts.length) {
+    // pick a popular default per city
+    const popular = { Bangalore: "Whitefield", Mumbai: "Bandra West", Delhi: "Saket",
+      Pune: "Hinjewadi", Hyderabad: "Gachibowli", Chennai: "Adyar", Kolkata: "Salt Lake" };
+    sel.value = (popular[city] && opts.includes(popular[city])) ? popular[city] : opts[0];
+  }
+  if (hint) hint.textContent = `${opts.length} ${city} ${opts.length === 1 ? "area" : "areas"}`;
+
+  // Repaint area pins on map for this city (slot a only when not optional)
+  if (!optional) plotAreaPins(city);
 }
 
 /* ─── Inputs wiring ───────────────────────────────────── */
@@ -88,12 +115,11 @@ function wireSegments() {
 /* ─── Predict ─────────────────────────────────────────── */
 async function runPredict() {
   const city = $("#uiCity").value;
-  const isBlr = city === "Bangalore";
   const body = new URLSearchParams({
     total_sqft: +$("#uiSqft").value,
     bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
     city,
-    location: isBlr ? $("#uiLocations").value : "",
+    location: $("#uiLocations").value || "",
   });
   const r = await fetch(`${API}/predict_home_price`, { method: "POST", body });
   const d = await r.json();
@@ -180,8 +206,8 @@ async function runCompare() {
   const body = new URLSearchParams({
     total_sqft: +$("#uiSqft").value,
     bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
-    city_a: cityA, location_a: cityA === "Bangalore" ? $("#uiLocations").value : "",
-    city_b: cityB, location_b: cityB === "Bangalore" ? $("#uiLocationsB").value : "",
+    city_a: cityA, location_a: $("#uiLocations").value || "",
+    city_b: cityB, location_b: $("#uiLocationsB").value || "",
   });
   const r = await fetch(`${API}/compare_locations`, { method: "POST", body });
   const d = await r.json();
@@ -210,7 +236,7 @@ async function runPitch() {
     total_sqft: +$("#uiSqft").value,
     bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
     city,
-    location: city === "Bangalore" ? $("#uiLocations").value : "",
+    location: $("#uiLocations").value || "",
   });
   $("#pitchBlock").hidden = false;
   $("#pitchText").textContent = "Composing…";
@@ -245,12 +271,35 @@ function initMap() {
       .bindPopup(`<b>${name}</b><br/>₹${fmt(c.pps)}/sqft · ${c.tier}`);
     m.on("click", () => {
       $("#uiCity").value = name;
-      toggleLocalityVisibility();
-      runPredict();
+      loadAreasFor(name, "#uiLocations", "#hintA", false).then(runPredict);
       document.getElementById("predict").scrollIntoView({ behavior: "smooth" });
     });
     state.cityMarkers[name] = m;
   });
+}
+
+/* ─── Area pins (per-city overlay) ────────────────────── */
+function plotAreaPins(city) {
+  if (!state.map) return;
+  // Clear previous area overlay
+  if (state._areaLayer) { state.map.removeLayer(state._areaLayer); state._areaLayer = null; }
+  fetch(`${API}/areas/${encodeURIComponent(city)}`).then((r) => r.json()).then((d) => {
+    const areas = d.areas || {};
+    const grp = L.layerGroup();
+    Object.entries(areas).forEach(([name, a]) => {
+      if (!a.coords) return;
+      const dot = L.circleMarker(a.coords, {
+        radius: 5, color: "#7d8aa3", weight: 1.5, fillColor: "#7d8aa3", fillOpacity: 0.45,
+      }).bindTooltip(`${name} · ₹${fmt(a.pps)}/sqft`, { direction: "top", offset: [0, -4] });
+      dot.on("click", () => {
+        $("#uiLocations").value = name;
+        runPredict();
+      });
+      grp.addLayer(dot);
+    });
+    grp.addTo(state.map);
+    state._areaLayer = grp;
+  }).catch(() => {});
 }
 
 function placeMarker(slot, coords, label) {
@@ -402,8 +451,12 @@ function initNav() {
 /* ─── Boot ────────────────────────────────────────────── */
 window.addEventListener("DOMContentLoaded", async () => {
   wireSegments();
-  $("#uiCity").addEventListener("change", () => { toggleLocalityVisibility(); });
-  $("#uiCityB").addEventListener("change", toggleLocalityVisibility);
+  $("#uiCity").addEventListener("change", (e) => {
+    loadAreasFor(e.target.value, "#uiLocations", "#hintA", false);
+  });
+  $("#uiCityB").addEventListener("change", (e) => {
+    loadAreasFor(e.target.value, "#uiLocationsB", "#hintB", true);
+  });
   $("#btnEstimate").addEventListener("click", runPredict);
   $("#btnPitch").addEventListener("click", runPitch);
   $("#btnCompare").addEventListener("click", runCompare);
@@ -412,8 +465,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   wireMagnetic();
   initScrollAnims();
 
-  await loadData();
+  // Load city/coords/locality catalogues, init map, then populate area dropdowns
+  await loadDataCatalogues();
   initMap();
+  await populateAreaDropdowns();
   // first prediction
   setTimeout(runPredict, 600);
 });

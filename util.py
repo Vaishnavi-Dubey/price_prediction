@@ -29,6 +29,7 @@ __model = None
 __stats: dict = {}
 __coords: dict = {}
 __cities: dict = {}
+__areas: dict = {}      # { city: { area_name: { pps, coords } } }
 __baseline_city: str = "bangalore"
 
 SENTIMENT_MULTIPLIERS = {
@@ -46,7 +47,7 @@ def _norm(s: str) -> str:
 # Artifact loading
 # ─────────────────────────────────────────────────────────────────────────────
 def load_saved_artifacts() -> None:
-    global __data_columns, __locations, __model, __stats, __coords, __cities, __baseline_city
+    global __data_columns, __locations, __model, __stats, __coords, __cities, __areas, __baseline_city
     print("loading saved artifacts...start")
 
     with open(BASE_DIR / "columns.json", "r") as f:
@@ -72,9 +73,15 @@ def load_saved_artifacts() -> None:
         __cities = ci.get("cities", {})
         __baseline_city = ci.get("_baseline_city", "bangalore")
 
+    if (BASE_DIR / "city_areas.json").exists():
+        raw = json.load(open(BASE_DIR / "city_areas.json"))
+        __areas = {k: v for k, v in raw.items() if not k.startswith("_")}
+
     print(
         f"loading saved artifacts...done  "
-        f"({len(__locations)} BLR localities, {len(__cities)} Indian cities)"
+        f"({len(__locations)} BLR ML localities · "
+        f"{len(__cities)} cities · "
+        f"{sum(len(a) for a in __areas.values())} curated areas)"
     )
 
 
@@ -88,6 +95,29 @@ def get_cities() -> dict:
 
 def get_all_coords() -> dict:
     return __coords
+
+
+def get_areas(city: str) -> dict:
+    """Return curated areas for a city: { name: { pps, coords } }."""
+    if not city:
+        return {}
+    target = _norm(city)
+    for k, v in __areas.items():
+        if _norm(k) == target:
+            return v
+    return {}
+
+
+def _area_lookup(city: str, area: str) -> Optional[dict]:
+    """Case-insensitive area lookup within a city."""
+    if not city or not area:
+        return None
+    areas = get_areas(city)
+    target = _norm(area)
+    for k, v in areas.items():
+        if _norm(k) == target:
+            return {"name": k, **v}
+    return None
 
 
 def get_coords(location: str) -> Optional[list[float]]:
@@ -156,17 +186,15 @@ def _city_lookup(city: str) -> Optional[dict]:
     return None
 
 
-def _predict_city(city_data: dict, sqft: float, bhk: int, bath: int,
+def _predict_area(area_data: dict, sqft: float, bhk: int, bath: int,
                   sentiment: str = "neutral") -> tuple[float, dict]:
-    base_pps = float(city_data["pps"])
+    """Same math as city-index but uses the area's pps."""
+    base_pps = float(area_data["pps"])
     base_lakh = (base_pps * sqft) / 100000.0
-
     bhk_factor = 1.0 + (bhk - 2) * 0.02
     bath_factor = 1.0 + (bath - 2) * 0.015
     sentiment_factor = SENTIMENT_MULTIPLIERS.get(sentiment, 1.0)
-
     price = base_lakh * bhk_factor * bath_factor * sentiment_factor
-
     breakdown = {
         "base_lakh": round(base_lakh, 2),
         "bhk_factor": round(bhk_factor, 3),
@@ -176,11 +204,11 @@ def _predict_city(city_data: dict, sqft: float, bhk: int, bath: int,
     return round(price, 2), breakdown
 
 
-def _explain_city(city: str, breakdown: dict, sqft: float, bhk: int, bath: int,
-                  city_data: dict) -> list[dict]:
+def _explain_area(label: str, breakdown: dict, sqft: float, bhk: int, bath: int,
+                  area_pps: float) -> list[dict]:
     base = breakdown["base_lakh"]
     items = [{
-        "feature": f"Base · {city} median (₹{int(city_data['pps']):,}/sqft × {int(sqft)} sqft)",
+        "feature": f"Base · {label} median (₹{int(area_pps):,}/sqft × {int(sqft)} sqft)",
         "contribution_lakh": base,
         "direction": "increases",
     }]
@@ -214,23 +242,45 @@ def _explain_city(city: str, breakdown: dict, sqft: float, bhk: int, bath: int,
 # ─────────────────────────────────────────────────────────────────────────────
 def predict(city: str, location: Optional[str], sqft: float, bhk: int, bath: int,
             sentiment: str = "neutral") -> dict:
-    """Unified predictor: Bangalore → full ML; other cities → city-index inference."""
+    """Unified predictor — 3 modes:
+       (1) BLR + ML-known locality  → full LinearRegression model
+       (2) any city + curated area  → area-index inference
+       (3) city only (no area)      → city-index inference
+    """
     is_blr = _norm(city) == _norm(__baseline_city)
     coords = None
 
-    if is_blr and location:
+    # 1 — BLR + ML-known locality (best mode for BLR)
+    if is_blr and location and _norm(location) in __data_columns:
         price = _predict_blr(location, sqft, bhk, bath, sentiment)
         explanation = _explain_blr(location, sqft, bhk, bath)
-        coords = get_coords(location) or __cities.get("Bangalore", {}).get("coords")
+        coords = get_coords(location) or _area_lookup(city, location)
+        if isinstance(coords, dict):
+            coords = coords.get("coords")
+        if not coords:
+            coords = __cities.get("Bangalore", {}).get("coords")
         mode = "ml-localized"
+
     else:
-        city_data = _city_lookup(city)
-        if not city_data:
-            raise ValueError(f"Unknown city: {city}")
-        price, bd = _predict_city(city_data, sqft, bhk, bath, sentiment)
-        explanation = _explain_city(city, bd, sqft, bhk, bath, city_data)
-        coords = city_data["coords"]
-        mode = "city-index"
+        # 2 — Any city + curated area
+        area_data = _area_lookup(city, location) if location else None
+        if area_data:
+            price, bd = _predict_area(area_data, sqft, bhk, bath, sentiment)
+            explanation = _explain_area(
+                f"{area_data['name']}, {city}", bd, sqft, bhk, bath, area_data["pps"]
+            )
+            coords = area_data.get("coords")
+            mode = "area-index"
+
+        # 3 — City fallback
+        else:
+            city_data = _city_lookup(city)
+            if not city_data:
+                raise ValueError(f"Unknown city: {city}")
+            price, bd = _predict_area(city_data, sqft, bhk, bath, sentiment)
+            explanation = _explain_area(city, bd, sqft, bhk, bath, city_data["pps"])
+            coords = city_data["coords"]
+            mode = "city-index"
 
     investment = get_investment_score(city, location, sqft, bhk, bath, sentiment, price)
 
@@ -250,18 +300,30 @@ def predict(city: str, location: Optional[str], sqft: float, bhk: int, bath: int
 def get_investment_score(city: str, location: Optional[str], sqft: float, bhk: int,
                          bath: int, sentiment: str, predicted_price: float) -> dict:
     predicted_pps = (predicted_price * 100000.0) / max(sqft, 1.0)
+    benchmark = None
+    source = "city"
+    sample = 0
 
+    # BLR + locality with empirical stats from training data
     if _norm(city) == _norm(__baseline_city) and location:
         loc_stats = __stats.get("locations", {}).get(_norm(location))
-        city_stats = __stats.get("city", {})
-        benchmark = (loc_stats or {}).get("median_pps") or city_stats.get("median_pps") or predicted_pps
-        source = "locality" if loc_stats else "bangalore-city"
-        sample = (loc_stats or {}).get("count", 0)
-    else:
+        if loc_stats:
+            benchmark = loc_stats.get("median_pps")
+            source = "BLR locality (empirical)"
+            sample = loc_stats.get("count", 0)
+
+    # Any city + curated area
+    if benchmark is None and location:
+        ad = _area_lookup(city, location)
+        if ad:
+            benchmark = float(ad["pps"])
+            source = f"{ad['name']} curated"
+
+    # City fallback
+    if benchmark is None:
         cd = _city_lookup(city) or {}
         benchmark = float(cd.get("pps", predicted_pps))
         source = f"{city} median"
-        sample = 0
 
     discount_pct = (benchmark - predicted_pps) / max(benchmark, 1.0) * 100.0
     score = max(0.0, min(10.0, 5.0 + (discount_pct / 30.0) * 5.0))
