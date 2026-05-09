@@ -1,15 +1,4 @@
-"""
-Prophecy Bangalore — Flask API.
-
-Endpoints:
-  GET  /                       → serve the SPA (app.html)
-  GET  /get_location_names     → list of locations the model knows
-  POST /predict_home_price     → price + explanation + investment score
-  POST /compare_locations      → side-by-side comparison
-  POST /sales_pitch            → AI-generated property pitch
-  GET  /coords                 → bulk locality coordinates for the map
-"""
-
+"""Prophecy India — Flask API."""
 from __future__ import annotations
 
 import os
@@ -25,8 +14,10 @@ app = Flask(__name__, static_folder=str(BASE_DIR), static_url_path="")
 CORS(app)
 
 
-def _form(key: str, default=None):
-    return request.form.get(key, request.json.get(key, default) if request.is_json else default)
+def _v(key: str, default=None):
+    if request.is_json and request.json:
+        return request.json.get(key, request.form.get(key, default))
+    return request.form.get(key, default)
 
 
 @app.route("/")
@@ -35,8 +26,13 @@ def index():
 
 
 @app.route("/get_location_names", methods=["GET"])
-def get_location_names():
+def get_locations():
     return jsonify({"locations": util.get_location_names()})
+
+
+@app.route("/cities", methods=["GET"])
+def cities():
+    return jsonify({"cities": util.get_cities(), "baseline": "bangalore"})
 
 
 @app.route("/coords", methods=["GET"])
@@ -45,49 +41,47 @@ def coords():
 
 
 @app.route("/predict_home_price", methods=["POST"])
-def predict_home_price():
-    sqft = float(_form("total_sqft"))
-    location = _form("location")
-    bhk = int(_form("bhk"))
-    bath = int(_form("bath"))
-    sentiment = (_form("sentiment") or "neutral").lower()
-
-    price = util.get_estimated_price(location, sqft, bhk, bath, sentiment)
-    explanation = util.explain_prediction(location, sqft, bhk, bath)
-    investment = util.get_investment_score(location, sqft, bhk, bath, sentiment)
-    coords = util.get_coords(location)
-    return jsonify({
-        "estimated_price": price,
-        "currency": "INR Lakh",
-        "explanation": explanation,
-        "investment": investment,
-        "coords": coords,
-        "sentiment": sentiment,
-    })
+def predict():
+    sqft = float(_v("total_sqft"))
+    bhk = int(_v("bhk"))
+    bath = int(_v("bath"))
+    city = _v("city") or "Bangalore"
+    location = _v("location") or None
+    sentiment = (_v("sentiment") or "neutral").lower()
+    try:
+        return jsonify(util.predict(city, location, sqft, bhk, bath, sentiment))
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
 
 @app.route("/compare_locations", methods=["POST"])
-def compare_locations():
-    sqft = float(_form("total_sqft"))
-    bhk = int(_form("bhk"))
-    bath = int(_form("bath"))
-    sentiment = (_form("sentiment") or "neutral").lower()
-    return jsonify(util.compare_locations(
-        _form("location_a"), _form("location_b"), sqft, bhk, bath, sentiment,
+def compare():
+    sqft = float(_v("total_sqft"))
+    bhk = int(_v("bhk"))
+    bath = int(_v("bath"))
+    sentiment = (_v("sentiment") or "neutral").lower()
+    return jsonify(util.compare(
+        _v("city_a") or "Bangalore", _v("location_a") or None,
+        _v("city_b") or "Bangalore", _v("location_b") or None,
+        sqft, bhk, bath, sentiment,
     ))
 
 
 @app.route("/sales_pitch", methods=["POST"])
-def sales_pitch():
-    sqft = float(_form("total_sqft"))
-    bhk = int(_form("bhk"))
-    bath = int(_form("bath"))
-    sentiment = (_form("sentiment") or "neutral").lower()
-    pitch = util.generate_sales_pitch(_form("location"), sqft, bhk, bath, sentiment)
-    return jsonify({"pitch": pitch})
+def pitch():
+    sqft = float(_v("total_sqft"))
+    bhk = int(_v("bhk"))
+    bath = int(_v("bath"))
+    sentiment = (_v("sentiment") or "neutral").lower()
+    return jsonify({
+        "pitch": util.generate_sales_pitch(
+            _v("city") or "Bangalore", _v("location") or None,
+            sqft, bhk, bath, sentiment,
+        ),
+    })
 
 
 if __name__ == "__main__":
-    print("Starting Prophecy Bangalore Flask server…")
+    print("Starting Prophecy India Flask server…")
     util.load_saved_artifacts()
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=False)

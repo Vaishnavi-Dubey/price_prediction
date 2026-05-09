@@ -1,25 +1,83 @@
-// Prophecy Bangalore — frontend logic
-const API = window.location.origin.startsWith("http") && window.location.port
-  ? "" // same origin (Flask serves us)
+/* ============================================================
+   Prophecy India — frontend logic
+   - GSAP + ScrollTrigger for choreography
+   - IntersectionObserver fallbacks for reduced-motion
+   - Magnetic cursor on CTAs
+   - Hero word-by-word reveal, blueprint draw-on, scroll-linked stats
+   ============================================================ */
+const API = (window.location.port && window.location.port !== "")
+  ? "" // same origin — Flask serves us
   : "http://127.0.0.1:5000";
 
+const $ = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 const state = {
-  bhk: 2,
-  bath: 2,
-  sentiment: "neutral",
-  coords: {},
+  bhk: 2, bath: 2, sentiment: "neutral",
+  cities: {},      // pan-India map
+  blrLocs: [],
+  coords: {},      // BLR locality coords
   map: null,
-  marker: null,
-  markerB: null,
+  markers: { a: null, b: null },
+  cityMarkers: {},
 };
 
-// ── helpers ─────────────────────────────────────────────
-const $ = (sel) => document.querySelector(sel);
+/* ─── helpers ─────────────────────────────────────────── */
+const fmt = (x) => Number(x).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+const cap = (s) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 
-function wireSwitch(name, key) {
-  document.querySelectorAll(`[data-name="${name}"] button`).forEach((btn) => {
-    btn.addEventListener("click", () => {
-      btn.parentElement.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
+/* ─── data load ───────────────────────────────────────── */
+async function loadData() {
+  const [cR, lR, ccR] = await Promise.all([
+    fetch(`${API}/cities`),
+    fetch(`${API}/get_location_names`),
+    fetch(`${API}/coords`),
+  ]);
+  state.cities = (await cR.json()).cities;
+  state.blrLocs = (await lR.json()).locations;
+  state.coords = (await ccR.json()).coords;
+
+  // City selectors (sort: Bangalore first, then alphabetical)
+  const cityKeys = Object.keys(state.cities).sort((a, b) =>
+    a === "Bangalore" ? -1 : b === "Bangalore" ? 1 : a.localeCompare(b)
+  );
+  const cityHtml = cityKeys.map((c) =>
+    `<option value="${c}">${c} · ₹${fmt(state.cities[c].pps)}/sqft</option>`
+  ).join("");
+  $("#uiCity").innerHTML = cityHtml;
+  $("#uiCityB").innerHTML = cityHtml;
+  $("#uiCityB").value = "Mumbai";
+
+  // BLR localities
+  const locHtml = state.blrLocs.map((l) => `<option>${cap(l)}</option>`).join("");
+  $("#uiLocations").innerHTML = locHtml;
+  $("#uiLocationsB").innerHTML = `<option value="">— optional —</option>` + locHtml;
+  $("#uiLocations").value = state.blrLocs.find((l) => l.includes("whitefield")) ? "Whitefield" : cap(state.blrLocs[0]);
+
+  // Ticker
+  const tick = $("#ticker");
+  const tickItems = cityKeys.map((c) => `<span>${c} <b>₹${fmt(state.cities[c].pps)}</b></span>`).join("");
+  tick.innerHTML = tickItems + tickItems; // duplicate for seamless loop
+
+  toggleLocalityVisibility();
+}
+
+function toggleLocalityVisibility() {
+  const isBlr = $("#uiCity").value === "Bangalore";
+  $("#locationRow").style.display = isBlr ? "" : "none";
+  const isBlrB = $("#uiCityB").value === "Bangalore";
+  $("#locationRowB").style.display = isBlrB ? "" : "none";
+}
+
+/* ─── Inputs wiring ───────────────────────────────────── */
+function wireSegments() {
+  $$('.seg').forEach((seg) => {
+    const key = seg.dataset.name;
+    seg.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      seg.querySelectorAll("button").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       const v = btn.dataset.value;
       state[key] = isNaN(+v) ? v : +v;
@@ -27,163 +85,335 @@ function wireSwitch(name, key) {
   });
 }
 
-function fmtLakh(x) { return Number(x).toLocaleString("en-IN", { maximumFractionDigits: 2 }); }
-
-// ── data load ───────────────────────────────────────────
-async function loadLocations() {
-  const r = await fetch(`${API}/get_location_names`);
-  const { locations } = await r.json();
-  const a = $("#uiLocations"); const b = $("#uiLocationsB");
-  a.innerHTML = locations.map((l) => `<option>${l}</option>`).join("");
-  b.innerHTML = `<option value="">— Optional —</option>` + locations.map((l) => `<option>${l}</option>`).join("");
-  // sensible default
-  const def = locations.find((l) => l.includes("whitefield")) || locations[0];
-  a.value = def;
-}
-
-async function loadCoords() {
-  const r = await fetch(`${API}/coords`);
-  const { coords } = await r.json();
-  state.coords = coords;
-}
-
-// ── map ─────────────────────────────────────────────────
-function initMap() {
-  state.map = L.map("map", { zoomControl: true }).setView([12.9716, 77.5946], 11);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap &copy; CARTO',
-  }).addTo(state.map);
-
-  // click-to-predict on the map: snap to nearest known locality
-  state.map.on("click", (e) => {
-    const nearest = nearestLocality(e.latlng.lat, e.latlng.lng);
-    if (!nearest) return;
-    $("#uiLocations").value = capitalCase(nearest);
-    runEstimate();
+/* ─── Predict ─────────────────────────────────────────── */
+async function runPredict() {
+  const city = $("#uiCity").value;
+  const isBlr = city === "Bangalore";
+  const body = new URLSearchParams({
+    total_sqft: +$("#uiSqft").value,
+    bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
+    city,
+    location: isBlr ? $("#uiLocations").value : "",
   });
+  const r = await fetch(`${API}/predict_home_price`, { method: "POST", body });
+  const d = await r.json();
+  if (d.error) { console.error(d.error); return; }
+  renderResult(d);
 }
 
-function nearestLocality(lat, lng) {
-  let best = null, bestD = Infinity;
-  for (const [k, [la, lo]] of Object.entries(state.coords)) {
-    const d = (la - lat) ** 2 + (lo - lng) ** 2;
-    if (d < bestD) { bestD = d; best = k; }
-  }
-  return best;
-}
+function renderResult(d) {
+  // Mode badge + meta
+  $("#resultBadge").textContent = d.mode === "ml-localized" ? "ml · localized" : "city-index";
+  $("#resultMeta").textContent = `${d.location || d.city} · ${state.bhk} BHK · ${$('#uiSqft').value} sqft`;
 
-function capitalCase(s) {
-  return s.replace(/\b\w/g, (c) => c.toUpperCase());
-}
+  // Price typography (animate count)
+  animateNumber($("#priceValue"), parseFloat($("#priceValue").dataset.last || 0), d.estimated_price, 900, 2);
+  $("#priceValue").dataset.last = d.estimated_price;
+  const inv = d.investment;
+  $("#ppsLine").textContent = `~ ₹${fmt(inv.predicted_price_per_sqft)} per sqft · ${d.sentiment} market · ${d.mode}`;
 
-function placeMarker(coords, label, isB = false) {
-  if (!coords) return;
-  const key = isB ? "markerB" : "marker";
-  if (state[key]) state.map.removeLayer(state[key]);
-  const color = isB ? "#7c5cff" : "#00e0a4";
-  state[key] = L.circleMarker(coords, {
-    radius: 10, color, weight: 3, fillColor: color, fillOpacity: 0.35,
-  }).addTo(state.map).bindPopup(`<b>${label}</b>`);
-}
-
-// ── render result ───────────────────────────────────────
-function renderResult(data, location) {
-  $("#estPrice").innerHTML = `${fmtLakh(data.estimated_price)} <span class="unit">Lakh</span>`;
-  const inv = data.investment;
-  $("#ppsLine").textContent = `~ ₹${fmtLakh(inv.predicted_price_per_sqft)} per sqft · ${data.sentiment} market`;
-
-  // score
-  $("#scoreCard").hidden = false;
-  $("#scoreValue").textContent = inv.score;
-  $("#scoreCard .score-circle").style.setProperty("--score", inv.score);
+  // Score arc
+  const dial = $("#scoreArc");
+  const offset = 263.9 * (1 - inv.score / 10);
+  gsap.to(dial, { strokeDashoffset: offset, duration: 1.0, ease: "power3.out" });
+  animateNumber($("#scoreValue"), parseFloat($("#scoreValue").dataset.last || 0), inv.score, 700, 1);
+  $("#scoreValue").dataset.last = inv.score;
   const v = $("#scoreVerdict");
-  v.textContent = `${inv.verdict} · ${inv.discount_vs_market_pct >= 0 ? "−" : "+"}${Math.abs(inv.discount_vs_market_pct)}% vs market`;
+  v.textContent = inv.verdict;
   v.className = "verdict " + (inv.score >= 7.5 ? "good" : inv.score >= 4.5 ? "warn" : "bad");
+  $("#scoreDiscount").textContent =
+    `${inv.discount_vs_market_pct >= 0 ? "−" : "+"}${Math.abs(inv.discount_vs_market_pct)}% vs market median`;
+  $("#scoreBenchmark").textContent =
+    `benchmark: ₹${fmt(inv.benchmark_price_per_sqft)}/sqft · source: ${inv.benchmark_source}`;
 
-  // explanation bars
+  // Explainability bars
   const list = $("#explainList");
   list.innerHTML = "";
-  const max = Math.max(...data.explanation.map((e) => Math.abs(e.contribution_lakh)), 1);
-  for (const e of data.explanation) {
+  const max = Math.max(...d.explanation.map((e) => Math.abs(e.contribution_lakh)), 1);
+  d.explanation.forEach((e, i) => {
     const pct = (Math.abs(e.contribution_lakh) / max) * 100;
     const sign = e.contribution_lakh >= 0 ? "pos" : "neg";
     const sym = e.contribution_lakh >= 0 ? "+" : "−";
-    list.insertAdjacentHTML("beforeend", `
-      <div class="explain-row">
-        <div>
-          <div class="label">${e.feature}</div>
-          <div class="bar"><div class="${sign}" style="width:${pct}%"></div></div>
-        </div>
-        <div class="value ${sign}">${sym}₹${fmtLakh(Math.abs(e.contribution_lakh))}L</div>
-      </div>`);
-  }
-
-  if (data.coords) {
-    placeMarker(data.coords, `${location}: ₹${fmtLakh(data.estimated_price)}L`);
-    state.map.setView(data.coords, 13);
-  }
-}
-
-// ── actions ─────────────────────────────────────────────
-async function runEstimate() {
-  const sqft = +$("#uiSqft").value;
-  const location = $("#uiLocations").value;
-  const locationB = $("#uiLocationsB").value;
-  const body = new URLSearchParams({
-    total_sqft: sqft, location, bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
+    const row = document.createElement("div");
+    row.className = "explain-row";
+    row.innerHTML = `
+      <div>
+        <div class="label">${e.feature}</div>
+        <div class="bar"><div class="${sign}" style="--w:${pct}%"></div></div>
+      </div>
+      <div class="value ${sign}">${sym}₹${fmt(Math.abs(e.contribution_lakh))}L</div>`;
+    list.appendChild(row);
+    // animate bar
+    const bar = row.querySelector('.bar > div');
+    gsap.to(bar, {
+      scaleX: pct / 100,
+      duration: 0.8,
+      delay: 0.05 + i * 0.07,
+      ease: "power3.out",
+    });
   });
-  const r = await fetch(`${API}/predict_home_price`, { method: "POST", body });
-  const data = await r.json();
-  renderResult(data, location);
-  $("#pitchBlock").hidden = true;
 
-  if (locationB) {
-    runCompare(sqft, location, locationB);
-  } else {
-    $("#compareBox").hidden = true;
-    if (state.markerB) { state.map.removeLayer(state.markerB); state.markerB = null; }
+  // Map marker
+  if (d.coords && state.map) {
+    placeMarker("a", d.coords, `${d.location || d.city}<br/><b>₹${fmt(d.estimated_price)}L</b>`);
+    state.map.flyTo(d.coords, d.location ? 13 : 11, { duration: 1.2 });
   }
 }
 
-async function runCompare(sqft, a, b) {
-  const body = new URLSearchParams({
-    total_sqft: sqft, location_a: a, location_b: b,
-    bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
+function animateNumber(el, from, to, dur, decimals = 0) {
+  if (reduce) { el.textContent = (+to).toFixed(decimals); return; }
+  const obj = { v: from };
+  gsap.to(obj, {
+    v: to, duration: dur / 1000, ease: "power3.out",
+    onUpdate: () => {
+      el.textContent = obj.v.toLocaleString("en-IN", {
+        minimumFractionDigits: decimals, maximumFractionDigits: decimals,
+      });
+    },
   });
-  const r = await fetch(`${API}/compare_locations`, { method: "POST", body });
-  const data = await r.json();
-  $("#compareBox").hidden = false;
-  $("#cmpA").textContent = `${data.a.location}: ₹${fmtLakh(data.a.estimated_price)}L`;
-  $("#cmpB").textContent = `${data.b.location}: ₹${fmtLakh(data.b.estimated_price)}L`;
-  $("#cmpSummary").textContent =
-    `${data.summary.cheaper_location} is cheaper by ₹${fmtLakh(data.summary.delta_lakh)}L (${data.summary.delta_pct}%). ` +
-    `Better value per sqft: ${data.summary.better_value_per_sqft}.`;
-  if (data.b.coords) placeMarker(data.b.coords, `${data.b.location}: ₹${fmtLakh(data.b.estimated_price)}L`, true);
 }
 
-async function runPitch() {
+/* ─── Compare ─────────────────────────────────────────── */
+async function runCompare() {
+  const cityA = $("#uiCity").value;
+  const cityB = $("#uiCityB").value;
   const body = new URLSearchParams({
     total_sqft: +$("#uiSqft").value,
-    location: $("#uiLocations").value,
     bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
+    city_a: cityA, location_a: cityA === "Bangalore" ? $("#uiLocations").value : "",
+    city_b: cityB, location_b: cityB === "Bangalore" ? $("#uiLocationsB").value : "",
   });
-  $("#pitchBlock").hidden = false;
-  $("#pitchText").textContent = "Generating…";
-  const r = await fetch(`${API}/sales_pitch`, { method: "POST", body });
-  const data = await r.json();
-  $("#pitchText").textContent = data.pitch;
+  const r = await fetch(`${API}/compare_locations`, { method: "POST", body });
+  const d = await r.json();
+  $("#compareStage").hidden = false;
+  $("#cmpAName").textContent = d.a.location || d.a.city;
+  $("#cmpBName").textContent = d.b.location || d.b.city;
+  $("#cmpAPrice").textContent = `₹${fmt(d.a.estimated_price)} L`;
+  $("#cmpBPrice").textContent = `₹${fmt(d.b.estimated_price)} L`;
+  $("#cmpAPps").textContent = `₹${fmt(d.a.investment.predicted_price_per_sqft)}/sqft · score ${d.a.investment.score}/10`;
+  $("#cmpBPps").textContent = `₹${fmt(d.b.investment.predicted_price_per_sqft)}/sqft · score ${d.b.investment.score}/10`;
+  $("#cmpDelta").textContent = `Δ ₹${fmt(d.summary.delta_lakh)}L`;
+  $("#cmpSummary").textContent =
+    `${d.summary.cheaper} is cheaper by ₹${fmt(d.summary.delta_lakh)}L (${d.summary.delta_pct}%). ` +
+    `Better value per sqft: ${d.summary.better_value_per_sqft}.`;
+
+  if (d.b.coords && state.map) placeMarker("b", d.b.coords, `${d.b.location || d.b.city}<br/><b>₹${fmt(d.b.estimated_price)}L</b>`);
+
+  gsap.fromTo(".compare-side.a", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: "power3.out" });
+  gsap.fromTo(".compare-side.b", { x: 40, opacity: 0 },  { x: 0, opacity: 1, duration: 0.6, ease: "power3.out", delay: 0.08 });
 }
 
-// ── boot ────────────────────────────────────────────────
-window.addEventListener("DOMContentLoaded", async () => {
-  wireSwitch("uiBHK", "bhk");
-  wireSwitch("uiBath", "bath");
-  wireSwitch("uiSentiment", "sentiment");
-  $("#btnEstimate").addEventListener("click", runEstimate);
-  $("#btnPitch").addEventListener("click", runPitch);
+/* ─── Pitch ───────────────────────────────────────────── */
+async function runPitch() {
+  const city = $("#uiCity").value;
+  const body = new URLSearchParams({
+    total_sqft: +$("#uiSqft").value,
+    bhk: state.bhk, bath: state.bath, sentiment: state.sentiment,
+    city,
+    location: city === "Bangalore" ? $("#uiLocations").value : "",
+  });
+  $("#pitchBlock").hidden = false;
+  $("#pitchText").textContent = "Composing…";
+  const r = await fetch(`${API}/sales_pitch`, { method: "POST", body });
+  const d = await r.json();
+  $("#pitchText").textContent = "";
+  // typewriter-ish reveal
+  const text = d.pitch;
+  let i = 0;
+  const tick = () => {
+    if (i >= text.length) return;
+    $("#pitchText").textContent += text[i++];
+    setTimeout(tick, 12);
+  };
+  tick();
+}
 
+/* ─── Map ─────────────────────────────────────────────── */
+function initMap() {
+  state.map = L.map("mapEl", { zoomControl: true, attributionControl: false })
+    .setView([22.0, 79.0], 5);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19 })
+    .addTo(state.map);
+
+  // City pulse pins
+  Object.entries(state.cities).forEach(([name, c]) => {
+    const el = document.createElement("div");
+    el.className = "pulse-pin";
+    const icon = L.divIcon({ html: el.outerHTML, className: '', iconSize: [12, 12] });
+    const m = L.marker(c.coords, { icon })
+      .addTo(state.map)
+      .bindPopup(`<b>${name}</b><br/>₹${fmt(c.pps)}/sqft · ${c.tier}`);
+    m.on("click", () => {
+      $("#uiCity").value = name;
+      toggleLocalityVisibility();
+      runPredict();
+      document.getElementById("predict").scrollIntoView({ behavior: "smooth" });
+    });
+    state.cityMarkers[name] = m;
+  });
+}
+
+function placeMarker(slot, coords, label) {
+  if (!state.map || !coords) return;
+  if (state.markers[slot]) state.map.removeLayer(state.markers[slot]);
+  const color = slot === "a" ? "#d97757" : "#f5ede0";
+  state.markers[slot] = L.circleMarker(coords, {
+    radius: 12, color, weight: 3, fillColor: color, fillOpacity: 0.25,
+  }).addTo(state.map).bindPopup(label);
+}
+
+/* ─── Magnetic CTA ────────────────────────────────────── */
+function wireMagnetic() {
+  if (reduce) return;
+  $$('[data-magnet]').forEach((btn) => {
+    let raf;
+    btn.addEventListener("mousemove", (e) => {
+      const r = btn.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
+      const dy = (e.clientY - (r.top + r.height / 2)) * 0.4;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        gsap.to(btn, { x: dx, y: dy, scale: 1.04, duration: 0.4, ease: "power3.out" });
+      });
+    });
+    btn.addEventListener("mouseleave", () => {
+      gsap.to(btn, { x: 0, y: 0, scale: 1, duration: 0.6, ease: "elastic.out(1, 0.5)" });
+    });
+  });
+}
+
+/* ─── Scroll choreography (GSAP) ──────────────────────── */
+function initScrollAnims() {
+  if (reduce) {
+    // Just show everything
+    gsap.set(".hero-title .word", { y: 0 });
+    gsap.set([".hero-meta", ".hero-sub", ".hero-actions", ".hero-scroll"], { opacity: 1 });
+    gsap.set(".reveal", { opacity: 1, y: 0 });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // 1 — Hero entrance: word-by-word
+  const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+  tl.to(".hero-title .word", {
+      y: 0, duration: 1.0, stagger: 0.07,
+    })
+    .to(".hero-meta",     { opacity: 1, duration: 0.6 }, 0.2)
+    .to(".hero-sub",      { opacity: 1, y: 0, duration: 0.7 }, 0.6)
+    .to(".hero-actions",  { opacity: 1, y: 0, duration: 0.7 }, 0.8)
+    .to(".hero-scroll",   { opacity: 1, duration: 0.6 }, 1.2);
+
+  // Blueprint draw-on
+  gsap.to(".bp-line", {
+    strokeDashoffset: 0, duration: 2.4,
+    ease: "power2.inOut", delay: 0.2,
+  });
+  gsap.to(".bp-anno text", {
+    opacity: 0.7, duration: 0.5, stagger: 0.15, delay: 1.4,
+  });
+
+  // 2 — Reveal blocks on scroll
+  $$('.reveal').forEach((el) => {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: 0.9, ease: "expo.out",
+      scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none none" },
+    });
+  });
+
+  // 3 — Section title parallax (scroll-linked)
+  $$('.section-title.big').forEach((el) => {
+    gsap.fromTo(el, { y: 60 }, {
+      y: -30, ease: "none",
+      scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.6 },
+    });
+  });
+
+  // 4 — Animated counters (data section)
+  $$('.stat-value').forEach((el) => {
+    const target = parseFloat(el.dataset.count);
+    const decimals = parseInt(el.dataset.decimals || "0", 10);
+    ScrollTrigger.create({
+      trigger: el, start: "top 80%", once: true,
+      onEnter: () => {
+        const obj = { v: 0 };
+        gsap.to(obj, {
+          v: target, duration: 1.6, ease: "power3.out",
+          onUpdate: () => {
+            el.textContent = obj.v.toLocaleString("en-IN", {
+              minimumFractionDigits: decimals, maximumFractionDigits: decimals,
+            });
+          },
+        });
+      },
+    });
+  });
+
+  // 5 — Pipeline stagger
+  ScrollTrigger.create({
+    trigger: ".pipeline", start: "top 80%", once: true,
+    onEnter: () => {
+      gsap.fromTo(".pipe-step, .pipe-arrow",
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, ease: "expo.out", stagger: 0.08 });
+    },
+  });
+}
+
+/* ─── Nav: scrolled state + active link indicator ────── */
+function initNav() {
+  const nav = $("#nav");
+  const indicator = $(".nav-indicator");
+  const links = $$(".nav-links a[data-link]");
+
+  const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 30);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Hover indicator
+  const moveIndicator = (el) => {
+    if (!el) { indicator.style.opacity = 0; return; }
+    const r = el.getBoundingClientRect();
+    const pr = el.parentElement.parentElement.getBoundingClientRect();
+    indicator.style.opacity = 1;
+    indicator.style.left = (r.left - pr.left + 8) + "px";
+    indicator.style.width = (r.width - 16) + "px";
+  };
+  links.forEach((a) => a.addEventListener("mouseenter", () => moveIndicator(a)));
+  $(".nav-links").addEventListener("mouseleave", () => moveIndicator(null));
+
+  // Active section based on scroll
+  const sections = links.map((a) => document.querySelector(a.getAttribute("href")));
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (en.isIntersecting) {
+        const i = sections.indexOf(en.target);
+        if (i >= 0) moveIndicator(links[i]);
+      }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  sections.forEach((s) => s && obs.observe(s));
+
+  // Mobile burger
+  $(".nav-burger").addEventListener("click", () => nav.classList.toggle("open"));
+  links.forEach((a) => a.addEventListener("click", () => nav.classList.remove("open")));
+}
+
+/* ─── Boot ────────────────────────────────────────────── */
+window.addEventListener("DOMContentLoaded", async () => {
+  wireSegments();
+  $("#uiCity").addEventListener("change", () => { toggleLocalityVisibility(); });
+  $("#uiCityB").addEventListener("change", toggleLocalityVisibility);
+  $("#btnEstimate").addEventListener("click", runPredict);
+  $("#btnPitch").addEventListener("click", runPitch);
+  $("#btnCompare").addEventListener("click", runCompare);
+
+  initNav();
+  wireMagnetic();
+  initScrollAnims();
+
+  await loadData();
   initMap();
-  await Promise.all([loadLocations(), loadCoords()]);
-  runEstimate();
+  // first prediction
+  setTimeout(runPredict, 600);
 });
